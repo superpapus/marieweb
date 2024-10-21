@@ -1,0 +1,19 @@
+{% extends 'inicio/inicio.html' %}
+
+{% block content %}
+    <h2>Resultados de búsqueda</h2>
+    {% if query %}
+        <p>Mostrando resultados para: "{{ query }}"</p>
+    {% if productos %}
+        <ul>
+        {% for producto in productos %}
+            <li>{{ producto.nombre }} - ${{ producto.precio }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No se encontraron productos con lo escrito.</p>
+    {% endif %}
+    {% else %}
+        <p>Por favor ingresa un término de búsqueda.</p>
+    {% endif %}
+{% endblock %}
