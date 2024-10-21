@@ -11,8 +11,6 @@ build/
 *.log
 
 # Django
-*.sqlite3
-db.sqlite3
 local_settings.py
 
 # Environments
