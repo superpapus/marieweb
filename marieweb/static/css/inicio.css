@@ -2,10 +2,11 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    background-color: #FFA5AB;
 }
 
 header {
-    background-color: #f8f9fa;
+    background-color: #DA627D;
     padding: 10px 20px;
 }
 
@@ -13,6 +14,8 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background-color: #DA627D;
+    color: white;
 }
 
 .logo {
@@ -54,6 +57,8 @@ header {
 
 .product-card {
     border: 1px solid #ccc;
+    background-color: #d1748b;
+    color: #450920;
     border-radius: 10px;
     padding: 10px;
 }
@@ -73,6 +78,12 @@ header {
     font-weight: bold;
     margin: 10px 0;
 }
+
+.product-card:hover {
+    background-color: #A53260;
+    color: #F9DBBD;
+    transition: background-color 0.3s ease;
+  }
 
 footer {
     background-color: #f8f9fa;
