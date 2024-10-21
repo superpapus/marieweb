@@ -61,6 +61,7 @@ header {
     color: #450920;
     border-radius: 10px;
     padding: 10px;
+    transition: background-color 0.3s ease;
 }
 .product-card img {
     width: 100%;
@@ -82,11 +83,11 @@ header {
 .product-card:hover {
     background-color: #A53260;
     color: #F9DBBD;
-    transition: background-color 0.3s ease;
-  }
+}
 
 footer {
-    background-color: #f8f9fa;
+    background-color: #DA627D;
+    color: white;
     padding: 10px 20px;
     text-align: center;
 }
