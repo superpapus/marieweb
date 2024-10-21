@@ -13,13 +13,21 @@
         <nav class="navbar">
             <div class="logo">Librería Marie</div>
             <div class="search-bar">
-                <input type="text" placeholder="Buscar...">
+                <form class="buscar-form" method="GET" action="{% url 'buscar_productos' %}">
+                    <input type="text" name="q" placeholder="Buscar productos..." value="{{ query|default:'' }}">
+                    <button type="submit">Buscar</button>
+                </form>
             </div>
             {% comment %} Aca seria mostrar Iniciar sesion o crear cuenta si el usuario no esta logeado {% endcomment %}
             <div class="account">
                 <button>Gestionar Cuenta</button>
             </div>
         </nav>
+
+        {% block content %}
+        <!-- Aquí se mostrarán los contenidos de cada página -->
+        {% endblock %}
+
     </header>
 
     <div class="filters">
