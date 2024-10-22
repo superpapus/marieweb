@@ -41,12 +41,11 @@
             </div>
             <div class="dropdown">
                 <label for="filtrar">Filtrar Por:</label>
-                <select id="filtrar">
-                    <option value="categoria">Por Categoría</option>
-                    <option value="libro">Libro</option>
-                    <option value="lapices">Lápices</option>
-                    <option value="bebida">Bebida</option>
-                    <option value="hojas">Hojas</option>
+                <select id="categoria" name="categoria" onchange="this.form.submit()">
+                    <option value="">Todas las Categorías</option>
+                    {% for categoria in categorias %}
+                    <option value="{{ categoria.id }}" {% if categoria_actual == categoria.id|stringformat:"s" %}selected{% endif %}>{{ categoria.nombre }}</option>
+                    {% endfor %}
                 </select>
             </div>
         </div>
