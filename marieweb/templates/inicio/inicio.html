@@ -18,7 +18,6 @@
                     <button type="submit">Buscar</button>
                 </form>
             </div>
-            {% comment %} Aca seria mostrar Iniciar sesion o crear cuenta si el usuario no esta logeado {% endcomment %}
             <div class="account">
                 <button>Gestionar Cuenta</button>
             </div>
@@ -26,7 +25,8 @@
 
 
     </header>
-    <form method="get" action="{% url 'inicio' %}"
+
+    <form method="get" action="{% url 'inicio' %}">
         <div class="filters">
             <div class="dropdown">
                 <label for="ordenar">Ordenar Por:</label>
@@ -54,6 +54,9 @@
             <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
             <h3>{{ producto.nombre }}</h3>
             <p>${{ producto.precio }}</p>
+            <p>Categoría: {{ producto.categoria.nombre }}</p>
+            <p>Stock disponible: {{ producto.stock }}</p>
+            <button type="button" class="btn_agregar">Agregar al carrito</button>
         </div>
         {% empty %}
         <p>No hay productos disponibles.</p>
