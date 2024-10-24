@@ -9,8 +9,10 @@
     <link rel="stylesheet" href="{% static "/css/inicio.css" %}">
 </head>
 <body>
+
     <header>
         <nav class="navbar">
+            <img src="media/icons/logo.png" alt="Logo" style="height: 80px;">
             <div class="logo">Librería Marie</div>
             <div class="search-bar">
                 <input type="text" placeholder="Buscar...">
@@ -21,6 +23,7 @@
             </div>
         </nav>
     </header>
+
     <form method="get" action="{% url 'inicio' %}"
         <div class="filters">
             <div class="dropdown">
