@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from .models import Producto, Categoria
 
-
 # Create your views here.
 def inicio(request):
     ordenar = request.GET.get('ordenar', 'destacado')
@@ -18,10 +17,6 @@ def inicio(request):
 
     if categoria_id:
         productos = productos.filter(categoria_id=categoria_id)
-
-
-
-
 
     return render(request, 'inicio/inicio.html', {
         'productos': productos, 

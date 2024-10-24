@@ -103,3 +103,17 @@ footer {
 #huevo img {
     animation: imgpalmeme 1s infinite linear;
 }
+
+.btn_agregar {
+    background-color: #A53260;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn_agregar:hover {
+    background-color: #8C294F; /* Color más oscuro al pasar el mouse */
+}
