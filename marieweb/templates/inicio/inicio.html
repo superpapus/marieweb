@@ -12,19 +12,26 @@
 
     <header>
         <nav class="navbar">
-            <img src="media/icons/logo.png" alt="Logo" style="height: 80px;">
-            <div class="logo">Librería Marie</div>
-            <div class="search-bar">
-                <input type="text" placeholder="Buscar...">
+            <div class="logo">
+                <img src="media/icons/logo.png" alt="Logo" style="height: 80px;">
+                <p></p>
+                <span>Librería Marie</span>
             </div>
-            {% comment %} Aca seria mostrar Iniciar sesion o crear cuenta si el usuario no esta logeado {% endcomment %}
+            <div class="search-bar">
+                <form class="buscar-form" method="GET" action="{% url 'buscar_productos' %}">
+                    <input type="text" name="q" placeholder="Buscar productos..." value="{{ query|default:'' }}">
+                    <button type="submit" class="btn_buscar">Buscar</button>
+                </form>
+            </div>
             <div class="account">
-                <button>Gestionar Cuenta</button>
+                <button class="btn_gestionar">Gestionar Cuenta</button>
             </div>
         </nav>
+
+
     </header>
 
-    <form method="get" action="{% url 'inicio' %}"
+    <form method="get" action="{% url 'inicio' %}">
         <div class="filters">
             <div class="dropdown">
                 <label for="ordenar">Ordenar Por:</label>
@@ -36,12 +43,11 @@
             </div>
             <div class="dropdown">
                 <label for="filtrar">Filtrar Por:</label>
-                <select id="filtrar">
-                    <option value="categoria">Por Categoría</option>
-                    <option value="libro">Libro</option>
-                    <option value="lapices">Lápices</option>
-                    <option value="bebida">Bebida</option>
-                    <option value="hojas">Hojas</option>
+                <select id="categoria" name="categoria" onchange="this.form.submit()">
+                    <option value="">Todas las Categorías</option>
+                    {% for categoria in categorias %}
+                    <option value="{{ categoria.id }}" {% if categoria_actual == categoria.id|stringformat:"s" %}selected{% endif %}>{{ categoria.nombre }}</option>
+                    {% endfor %}
                 </select>
             </div>
         </div>
@@ -53,6 +59,9 @@
             <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
             <h3>{{ producto.nombre }}</h3>
             <p>${{ producto.precio }}</p>
+            <p>Categoría: {{ producto.categoria.nombre }}</p>
+            <p>Stock disponible: {{ producto.stock }}</p>
+            <button type="button" class="btn_agregar">Agregar al carrito</button>
         </div>
         {% empty %}
         <p>No hay productos disponibles.</p>
