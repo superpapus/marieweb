@@ -9,17 +9,22 @@
     <link rel="stylesheet" href="{% static "/css/inicio.css" %}">
 </head>
 <body>
+
     <header>
         <nav class="navbar">
-            <div class="logo">Librería Marie</div>
+            <div class="logo">
+                <img src="media/icons/logo.png" alt="Logo" style="height: 80px;">
+                <p></p>
+                <span>Librería Marie</span>
+            </div>
             <div class="search-bar">
                 <form class="buscar-form" method="GET" action="{% url 'buscar_productos' %}">
                     <input type="text" name="q" placeholder="Buscar productos..." value="{{ query|default:'' }}">
-                    <button type="submit">Buscar</button>
+                    <button type="submit" class="btn_buscar">Buscar</button>
                 </form>
             </div>
             <div class="account">
-                <button>Gestionar Cuenta</button>
+                <button class="btn_gestionar">Gestionar Cuenta</button>
             </div>
         </nav>
 
