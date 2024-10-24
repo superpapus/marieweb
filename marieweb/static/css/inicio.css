@@ -53,6 +53,7 @@ header {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 
 .product-card {
@@ -65,7 +66,7 @@ header {
 }
 .product-card img {
     width: 100%;
-    height: 400px;
+    height: auto;
     border-radius: 5px;
     object-fit: cover;
 }
@@ -116,4 +117,14 @@ footer {
 
 .btn_agregar:hover {
     background-color: #8C294F; /* Color más oscuro al pasar el mouse */
+}
+
+@media (max-width: 768px) {
+    .product-grid {
+        padding: 0px 20px;
+    }
+    .product-card img {
+        height: 250px; 
+        object-fit: contain; 
+    }
 }
