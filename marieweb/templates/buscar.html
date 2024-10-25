@@ -1,18 +1,7 @@
 {% extends 'inicio/inicio.html' %}
 
 {% block content %}
-    <h2>Resultados de búsqueda</h2>
-    <form class="buscar-form" method="GET" action="{% url 'buscar_productos' %}">
-        
-        <input type="text" name="q" placeholder="Buscar productos..." value="{{ query|default:'' }}">
-        <input type="hidden" name="ordenar" value="{{ ordenar }}">
-        <select id="ordenar" name="ordenar" onchange="this.form.submit()">
-            <option value="destacado" {% if ordenar == 'destacado' %}selected{% endif %}>Destacado</option>
-            <option value="menor-precio" {% if ordenar == 'menor-precio' %}selected{% endif %}>Menor Precio</option>
-            <option value="mayor-precio" {% if ordenar == 'mayor-precio' %}selected{% endif %}>Mayor Precio</option>
-        </select>
-        <button type="submit" class="btn_buscar">Buscar</button>
-    </form>
+    <h2>Resultados de búsqueda</h2>   
     {% if query %}
         <p>Mostrando resultados para: "{{ query }}"</p>
     {% if productos %}
