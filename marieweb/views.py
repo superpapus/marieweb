@@ -7,7 +7,7 @@ def inicio(request):
     categoria_id = request.GET.get('categoria', None)
     query = request.GET.get('q', '')
     
-    productos = Producto.objects.all()
+    productos = Producto.objects.filter(enabled=True)
     
     if query != '':
         productos = productos.filter(nombre__icontains=query)
@@ -35,7 +35,7 @@ def buscar_productos(request):
     query = request.GET.get('q', '')  # Obtener el término de búsqueda desde la URL
     categoria_id = request.GET.get('categoria', None)
     
-    productos = Producto.objects.all()  # Obtener todos los productos
+    productos = Producto.objects.filter(enabled=True)
 
     if query:
         productos = Producto.objects.filter(nombre__icontains=query)  # Buscar productos que coincidan
