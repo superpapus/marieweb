@@ -64,12 +64,21 @@
             <button type="button" class="btn_agregar">Agregar al carrito</button>
         </div>
         {% empty %}
+
+        <script>
+            alert('No hay productos disponibles en este momento.');
+        </script>
+
         <p>No hay productos disponibles.</p>
+
         {% endfor %}
     </main>
 
     <footer>
         <p>Librería Marie :)</p>
     </footer>
+
+    {% block script %}{% endblock %}
+
 </body>
 </html>
