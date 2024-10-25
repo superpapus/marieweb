@@ -66,10 +66,10 @@
         {% empty %}
 
         <script>
-            alert('No hay productos disponibles en este momento.');
+            alert('No se ha ingresado productos válidos para la búsqueda.');
         </script>
-
-        <p>No hay productos disponibles.</p>
+        <img src="media/icons/falla.jpg" alt="Error img" />
+        <p>No hay productos solicitados disponibles. Intenta con un producto válido o con distinta terminología.</p>
 
         {% endfor %}
     </main>
