@@ -5,13 +5,18 @@ from .models import Producto, Categoria
 def inicio(request):
     ordenar = request.GET.get('ordenar', 'destacado')
     categoria_id = request.GET.get('categoria', None)
+    query = request.GET.get('q', '')
     
+    productos = Producto.objects.all()
+    
+    if query != '':
+        productos = productos.filter(nombre__icontains=query)
+
+
     if ordenar == 'menor-precio':
-        productos = Producto.objects.all().order_by('precio')
+        productos = productos.order_by('precio')
     elif ordenar == 'mayor-precio':
-        productos = Producto.objects.all().order_by('-precio')
-    else:
-        productos = Producto.objects.all()  # Default order uwu
+        productos = productos.order_by('-precio')
     
     categorias = Categoria.objects.all()
 
@@ -22,14 +27,26 @@ def inicio(request):
         'productos': productos, 
         'ordenar': ordenar, 
         'categorias': categorias, 
-        'categoria_actual': categoria_id
+        'categoria_actual': categoria_id,
+        'query': query
         })
 
 def buscar_productos(request):
     query = request.GET.get('q', '')  # Obtener el término de búsqueda desde la URL
-    productos = []  # Inicializar con una lista vacía
+    ordenar = request.GET.get('ordenar', 'destacado')
+    
+    productos = Producto.objects.all()  # Obtener todos los productos
 
     if query:
         productos = Producto.objects.filter(nombre__icontains=query)  # Buscar productos que coincidan
 
-    return render(request, 'buscar.html', {'productos': productos, 'query': query})
+    if ordenar == 'menor-precio':
+        productos = productos.order_by('precio')
+    elif ordenar == 'mayor-precio':
+        productos = productos.order_by('-precio')
+
+    return render(request, 'buscar.html', {
+        'productos': productos, 
+        'query': query,
+        'ordenar': ordenar
+        })
