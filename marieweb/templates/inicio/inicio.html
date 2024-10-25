@@ -19,7 +19,9 @@
             </div>
             <div class="search-bar">
                 <form class="buscar-form" method="GET" action="{% url 'buscar_productos' %}">
+                    
                     <input type="text" name="q" placeholder="Buscar productos..." value="{{ query|default:'' }}">
+                    <input type="hidden" name="ordenar" value="{{ ordenar }}">
                     <button type="submit" class="btn_buscar">Buscar</button>
                 </form>
             </div>
@@ -32,6 +34,7 @@
     </header>
 
     <form method="get" action="{% url 'inicio' %}">
+        <input type="hidden" name="q" value="{{ query|default:'' }}">
         <div class="filters">
             <div class="dropdown">
                 <label for="ordenar">Ordenar Por:</label>
