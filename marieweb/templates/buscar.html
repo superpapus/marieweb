@@ -18,16 +18,3 @@
         <p>Por favor ingresa un término de búsqueda.</p>
     {% endif %}
 {% endblock %}
-
-{% block script %}
-<script>
-    {% if query %}
-        {% if productos %}
-            alert('Se encontraron {{ productos|length }} productos para tu búsqueda: "{{ query }}"');
-        {% else %}
-            alert('No se encontraron productos con lo escrito: "{{ query }}"');
-    {% endif %}
-
-    {% endif %}
-</script>
-{% endblock %}

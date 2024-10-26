@@ -64,13 +64,10 @@
             <button type="button" class="btn_agregar">Agregar al carrito</button>
         </div>
         {% empty %}
-
-        <script>
-            alert('No se ha ingresado productos válidos para la búsqueda.');
-        </script>
-        <img src="media/icons/falla.jpg" alt="Error img" />
-        <p>No hay productos solicitados disponibles. Intenta con un producto válido o con distinta terminología.</p>
-
+        
+        <img src="{% static '/img/error.png' %}" alt="Error img" style="width: 300px; height: 300px;" />
+        <p style="font-family: 'Comic Sans MS'; margin-top: 100px;">No se ha encontrado "{{ query }}" dentro del portal... ¡Intenta con un producto válido, filtro o con distinta terminología!</p>
+        
         {% endfor %}
     </main>
 
