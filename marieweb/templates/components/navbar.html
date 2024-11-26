@@ -1,0 +1,15 @@
+{% load static %}
+<nav class="navbar">
+    <div class="logo">
+        <img src="{% static '/img/logo.png' %}" alt="Logo" style="height: 80px;">
+        <span>Librería Marie</span>
+    </div>
+    <form class="search-bar" method="GET" action="{% url 'inicio' %}">
+        <input type="text" name="q" placeholder="Buscar productos..." value="{{ query|default:'' }}">
+        <input type="hidden" name="ordenar" value="{{ ordenar }}">
+        <button type="submit" class="btn_buscar">Buscar</button>
+    </form>
+    <div class="account">
+        <button class="btn_gestionar">Gestionar Cuenta</button>
+    </div>
+</nav>
