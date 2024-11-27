@@ -1,84 +1,17 @@
+{% extends 'base.html' %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MARIE</title>
-    <link rel="stylesheet" href="{% static "/css/inicio.css" %}">
-</head>
-<body>
+{% block head %}
+    <link rel="stylesheet" href="{% static '/css/inicio.css' %}">
+    <title>Inicio</title>
+{% endblock head%}
 
-    <header>
-        <nav class="navbar">
-            <div class="logo">
-                <img src="media/icons/logo.png" alt="Logo" style="height: 80px;">
-                <p></p>
-                <span>Librería Marie</span>
-            </div>
-            <div class="search-bar">
-                <form class="buscar-form" method="GET" action="{% url 'buscar_productos' %}">
-                    
-                    <input type="text" name="q" placeholder="Buscar productos..." value="{{ query|default:'' }}">
-                    <input type="hidden" name="ordenar" value="{{ ordenar }}">
-                    <button type="submit" class="btn_buscar">Buscar</button>
-                </form>
-            </div>
-            <div class="account">
-                <button class="btn_gestionar">Gestionar Cuenta</button>
-            </div>
-        </nav>
+{% block content %}
+<header>
+    {% include 'components/navbar.html' %}
+</header>
 
+{% include 'components/filters.html' %}
 
-    </header>
-
-    <form method="get" action="{% url 'inicio' %}">
-        <input type="hidden" name="q" value="{{ query|default:'' }}">
-        <div class="filters">
-            <div class="dropdown">
-                <label for="ordenar">Ordenar Por:</label>
-                <select id="ordenar" name="ordenar" onchange="this.form.submit()">
-                    <option value="destacado" {% if ordenar == 'destacado' %}selected{% endif %}>Destacado</option>
-                    <option value="menor-precio" {% if ordenar == 'menor-precio' %}selected{% endif %}>Menor Precio</option>
-                    <option value="mayor-precio" {% if ordenar == 'mayor-precio' %}selected{% endif %}>Mayor Precio</option>
-                </select>
-            </div>
-            <div class="dropdown">
-                <label for="filtrar">Filtrar Por:</label>
-                <select id="categoria" name="categoria" onchange="this.form.submit()">
-                    <option value="">Todas las Categorías</option>
-                    {% for categoria in categorias %}
-                    <option value="{{ categoria.id }}" {% if categoria_actual == categoria.id|stringformat:"s" %}selected{% endif %}>{{ categoria.nombre }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        </div>
-    </form>
-
-    <main class="product-grid">
-        {% for producto in productos %}
-        <div class="product-card">
-            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
-            <h3>{{ producto.nombre }}</h3>
-            <p>${{ producto.precio }}</p>
-            <p>Categoría: {{ producto.categoria.nombre }}</p>
-            <p>Stock disponible: {{ producto.stock }}</p>
-            <button type="button" class="btn_agregar">Agregar al carrito</button>
-        </div>
-        {% empty %}
-        
-        <img src="{% static '/img/error.png' %}" alt="Error img" style="width: 300px; height: 300px;" />
-        <p style="font-family: 'Comic Sans MS'; margin-top: 100px;">No se ha encontrado "{{ query }}" dentro del portal... ¡Intenta con un producto válido, filtro o con distinta terminología!</p>
-        
-        {% endfor %}
-    </main>
-
-    <footer>
-        <p>Librería Marie :)</p>
-    </footer>
-
-    {% block script %}{% endblock %}
-
-</body>
-</html>
+{% include 'components/products-grid.html' %}
+{% endblock content %}

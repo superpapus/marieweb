@@ -1,0 +1,22 @@
+<form method="get" action="{% url 'inicio' %}">
+    <input type="hidden" name="q" value="{{ query|default:'' }}">
+    <div class="filters">
+        <div class="dropdown">
+            <label for="ordenar">Ordenar Por:</label>
+            <select id="ordenar" name="ordenar" onchange="this.form.submit()">
+                <option value="destacado" {% if ordenar == 'destacado' %}selected{% endif %}>Destacado</option>
+                <option value="menor-precio" {% if ordenar == 'menor-precio' %}selected{% endif %}>Menor Precio</option>
+                <option value="mayor-precio" {% if ordenar == 'mayor-precio' %}selected{% endif %}>Mayor Precio</option>
+            </select>
+        </div>
+        <div class="dropdown">
+            <label for="filtrar">Filtrar Por:</label>
+            <select id="categoria" name="categoria" onchange="this.form.submit()">
+                <option value="">Todas las Categorías</option>
+                {% for categoria in categorias %}
+                <option value="{{ categoria.id }}" {% if categoria_actual == categoria.id|stringformat:"s" %}selected{% endif %}>{{ categoria.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+</form>
