@@ -1,7 +1,7 @@
 {% load static %}
 <nav class="navbar">
     <div class="logo">
-        <img src="{% static '/img/logo.png' %}" alt="Logo" style="height: 80px;">
+        <img src="/media/icons/logo.png" alt="Logo" style="height: 80px;">
         <span>Librería Marie</span>
     </div>
     <form class="search-bar" method="GET" action="{% url 'inicio' %}">
@@ -9,7 +9,27 @@
         <input type="hidden" name="ordenar" value="{{ ordenar }}">
         <button type="submit" class="btn_buscar">Buscar</button>
     </form>
+
+    <div>
+        {% if username %}
+            <h2>Hola, {{ username }}!</h2>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn_logout">Cerrar sesión</button>
+            </form>
+        {% else %}
+            <h2>Hola, visitante!</h2>
+        {% endif %}
+    </div>
+
     <div class="account">
         <button class="btn_gestionar">Gestionar Cuenta</button>
     </div>
+
+    <div class="account">
+        <a href="{% url 'login' %}" target="_blank">
+            <button type="submit" class="btn_login">Iniciar Sesión</button>
+        </a>
+    </div>
+
 </nav>
