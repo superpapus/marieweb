@@ -1,0 +1,35 @@
+.container {
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: 1fr 5fr;
+    grid-template-areas: "sidebar main";
+    padding-top: 20px;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    padding-left: 20px;
+}
+
+.sidebar-item {
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px; 
+    background-color: #f0f0f0;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.sidebar-item:hover {
+    background-color: #e0e0e0;
+}
+
+.sidebar-item.active {
+    background-color: #e0e0e0;
+}
+
+.content-deudas {
+    margin: 0 20px 0 20px;
+}

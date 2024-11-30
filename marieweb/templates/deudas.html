@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static '/css/deudas.css' %}">
+    <title>Deudas</title>
+{% endblock head%}
+
+{% block content %}
+<header>
+    {% include 'components/navbar.html' %}
+</header>
+<div class="container">
+    <div class="sidebar">
+        <a class="sidebar-item" href="{% url 'inicio' %}">Volver al Inicio</a>
+        <div class="sidebar-item">Mis Deudas</div>
+        <div class="sidebar-item">Ver todas las deudas</div>
+    </div>
+    <main class="content-deudas">
+        <h1>Mis Deudas</h1>
+        <p>En esta sección podrás ver todas tus deudas pendientes.</p>
+        {% include 'components/deudas-grid.html' %}
+    </main>
+</div>
+
+
+{% endblock content %}

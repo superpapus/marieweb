@@ -1,0 +1,22 @@
+<style>
+    .grid-deudas {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        padding: 10px;
+    }
+    .grid-deuda {
+        background-color: #f2f2f2;
+        padding: 20px;
+        text-align: center;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+    }
+</style>
+<section class="grid-deudas">
+    {% for deuda in deudas %}
+    <div class="grid-deuda">
+        {{ deuda.producto.nombre }} - A pagar: ${{ deuda.monto }}
+    </div>
+    {% endfor %}
+</section>

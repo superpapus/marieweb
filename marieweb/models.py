@@ -25,7 +25,7 @@ class Producto(models.Model):
 class Deuda(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE, default=None, blank=False, null=False, related_name='deudas')
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
-    precioProducto = models.IntegerField(default=0)
+    monto = models.IntegerField(default=0)
     cantidad = models.PositiveIntegerField(default=1)
     fecha = models.DateTimeField(auto_now_add=True)
     pagado = models.BooleanField(default=False)

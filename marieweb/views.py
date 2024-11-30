@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from .models import Producto, Categoria, Deuda
 
 # Create your views here.
@@ -52,3 +52,13 @@ def buscar_productos(request):
         'categorias': categorias, 
         'categoria_actual': categoria_id,
         })
+
+def deudas(request):
+    if not request.user.is_authenticated:
+        return redirect('inicio')
+    
+    deudas = request.user.deudas.all()
+    
+    return render(request, 'deudas.html', {
+        'deudas': deudas,
+    })
