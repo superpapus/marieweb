@@ -53,6 +53,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'marie.urls'
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_AGE = 3600
+LOGOUT_REDIRECT_URL = 'login'
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
