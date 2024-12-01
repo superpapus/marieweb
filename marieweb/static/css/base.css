@@ -117,7 +117,7 @@ header {
 }
 
 /* Botones */
-.btn_agregar,.btn_gestionar,.btn_buscar,.btn_login,.btn_logout {
+.btn_agregar,.btn_gestionar,.btn_buscar,.btn_login,.btn_logout,.btn_encargo {
     background-color: #A53260;
     border: none;
     padding: 10px 15px;

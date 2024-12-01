@@ -1,0 +1,84 @@
+.body {
+    font-family: Arial, sans-serif;
+    background-color: #FFA5AB; 
+    padding: 20px;
+}
+.encargo-form-container {
+    background-color: #DA627D;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 50px auto;
+    text-align: center;
+}
+
+.encargo-form-container h1 {
+    font-size: 28px;
+    color: #F9DBBD;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #F9DBBD;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #A53260;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+    background-color: #fff;
+    color: #450920;
+    margin-top: 5px;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #F9DBBD;
+    outline: none;
+}
+
+.btn-submit {
+    background-color: #A53260;
+    color: #F9DBBD;
+    padding: 12px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.btn-submit:hover {
+    background-color: #8E2953;
+}
+
+@media (max-width: 768px) {
+    .encargo-form-container {
+        padding: 20px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        font-size: 14px;
+    }
+
+    .btn-submit {
+        font-size: 16px;
+    }
+}

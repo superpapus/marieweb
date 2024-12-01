@@ -20,3 +20,22 @@ class Producto(models.Model):
 
     def __str__(self):
         return self.nombre
+
+class Encargo(models.Model):
+    ESTADOS = [
+        ('en_proceso', 'En Proceso'),
+        ('en_camino', 'En Camino'),
+        ('listo_para_recoger', 'Listo para Recoger'),
+    ]
+    encargo_nombre_producto = models.CharField(max_length=255, verbose_name="Nombre del producto")
+    encargo_cantidad_producto = models.PositiveIntegerField(verbose_name="Cantidad")
+    encargo_fecha = models.DateField(verbose_name="Día en que lo necesita")
+    encargo_comentario_extra = models.TextField(blank=True, verbose_name="Comentarios extra")
+    encargo_estado = models.CharField(
+        max_length=20,
+        choices=ESTADOS,
+        default='en_proceso',
+    )
+
+    def __str__(self):
+        return self.encargo_nombre_producto
