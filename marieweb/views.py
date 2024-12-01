@@ -57,8 +57,24 @@ def deudas(request):
     if not request.user.is_authenticated:
         return redirect('inicio')
     
+    busqueda = request.GET.get('q', '')
+    ordenarPor = request.GET.get('ordenarPor', 'fecha-agregado')
+
     deudas = request.user.deudas.all()
+
+    if busqueda != '':
+        deudas = deudas.filter(producto__nombre__icontains=busqueda)
+    
+    if ordenarPor == 'fecha-agregado':
+        deudas = deudas.order_by('-fecha')
+    elif ordenarPor == 'fecha-antiguo':
+        deudas = deudas.order_by('fecha')
+    elif ordenarPor == 'monto-mayor':
+        deudas = deudas.order_by('-monto')
+    elif ordenarPor == 'monto-menor':
+        deudas = deudas.order_by('monto')
     
     return render(request, 'deudas.html', {
         'deudas': deudas,
+        'ordenarPor': ordenarPor
     })
