@@ -1,5 +1,5 @@
 import datetime
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from .models import Producto, Categoria
 from django.contrib import messages
 from django.contrib.auth import login as auth_login, authenticate
@@ -41,6 +41,41 @@ def inicio(request):
         'query': query,
         'username': username
         })
+
+def gestionar_productos(request, producto_id=None):
+    producto = None
+    if producto_id:
+        producto = get_object_or_404(Producto, id=producto_id)
+    
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        descripcion = request.POST.get('descripcion')
+        precio = request.POST.get('precio')
+        stock = request.POST.get('stock')
+        enabled = request.POST.get('enabled') == 'on'
+        
+        if producto:
+            producto.nombre = nombre
+            producto.descripcion = descripcion
+            producto.precio = precio
+            producto.stock = stock
+            producto.enabled = enabled
+            producto.save()
+            messages.success(request, 'Producto actualizado exitosamente.')
+        else:
+            Producto.objects.create(
+                nombre=nombre,
+                descripcion=descripcion,
+                precio=precio,
+                stock=stock,
+                enabled=enabled
+            )
+            messages.success(request, 'Producto creado exitosamente.')
+        return redirect('gestionar_productos', producto_id=producto.id if producto else None)
+    
+    return render(request, 'gestionar_productos.html', {
+        'producto': producto
+    })
 
 def buscar_productos(request):
     query = request.GET.get('q', '')  # Obtener el término de búsqueda desde la URL

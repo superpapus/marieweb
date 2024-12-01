@@ -8,6 +8,9 @@
         <p>Categoría: {{ producto.categoria.nombre }}</p>
         <p>Stock disponible: {{ producto.stock }}</p>
         <button type="button" class="btn_agregar">Agregar al carrito</button>
+        {% if user.is_staff %}
+        <a href="{% url 'gestionar_productos' producto.id %}" class="btn_agregar">Editar Producto</a>
+        {% endif %}
     </div>
     {% empty %}
     
