@@ -21,6 +21,7 @@
     }
     .etiqueta {
         grid-area: etiqueta;
+        justify-self: center;
         padding: 5px 20px;
         border-radius: 20px;
         font-weight: bold;
@@ -83,7 +84,18 @@
     }
 </style>
 <section class="grid-deudas">
+    <div class="deuda-card">
+        <p style="grid-area: id; font-weight: bold; font-size: 16px; justify-self: left;">ID</p>
+        <p style="grid-area: usuario;">Usuario</p>
+        <p style="grid-area: metodo-pago;">Método de pago</p>
+        <p style="grid-area: etiqueta;">Estado</p>
+        <p style="grid-area: fecha;">Fecha</p>
+    </div>
+    {% if deudas|length == 0 %}
+    <p style="grid-column: 1 / -1; text-align: center; font-size: 20px; font-weight: bold;">No hay deudas</p>
+    {% endif %}
     {% for deuda in deudas %}
+    {% if pagado == deuda.pagado %}
     <div class="deuda-card">
         <p style="grid-area: id; font-weight: bold; font-size: 16px; justify-self: left;">Deuda #{{ deuda.pk }}</p>
         <p style="grid-area: usuario;">{{ deuda.usuario.username }}</p>
@@ -115,5 +127,6 @@
         <button onclick="location.href='ver/{{ deuda.pk }}'">Pagar</button>
         {% endif %}
     </div>
+    {% endif %}
     {% endfor %}
 </section>

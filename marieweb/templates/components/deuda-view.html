@@ -99,7 +99,9 @@
     <div class="total-monto">
         <h3>Total: ${{ deuda.monto_total }}</h3>
     </div>
+    {% if not deuda.pagado and not mostrarAdmin%}
     <div class="pagar-boton">
         <button onclick="location.href=''">Pagar</button>
     </div>
+    {% endif %}
 </div>

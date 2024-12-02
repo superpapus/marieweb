@@ -69,10 +69,11 @@ def deudas(request):
     else:
         deudas = request.user.deudas.all()
 
-    deudas = deudas.filter(pagado=False)
-    
     if busqueda != '':
-        deudas = deudas.filter(productos__nombre__icontains=busqueda) # | Q(usuario__username__icontains=busqueda)
+        if ruta[2] == 'admin':
+            deudas = deudas.filter(usuario__username__icontains=busqueda)
+        else:
+            deudas = deudas.filter(productos__nombre__icontains=busqueda)
     
     if ordenarPor == 'fecha-agregado':
         deudas = deudas.order_by('-fecha')
@@ -91,7 +92,8 @@ def deudas(request):
         descripcion = 'Aquí puedes ver todas tus deudas pendientes.'
 
     return render(request, 'deudas.html', {
-        'mostrarAdmin': request.user.is_staff,
+        'is_admin': request.user.is_staff,
+        'mostrarAdmin': ruta[2] == 'admin',
         'mostrar_filtro': True,
         'deudas': deudas,
         'busqueda': busqueda,
@@ -106,16 +108,18 @@ def ver_deuda(request, id):
     elif not request.user.is_staff and not Deuda.objects.get(pk=id).usuario == request.user:
         return redirect('deudas')
     
-    if request.user.is_staff:
+    mostrarAdmin = request.user.is_staff and request.path.split('/')[2] == 'admin'
+    if mostrarAdmin:
         titulo = 'Detalles de la deuda'
         descripcion = 'Aquí puedes ver los detalles de la deuda.'
     else:
         titulo = 'Detalles de tu deuda'
         descripcion = 'Aquí puedes ver los detalles de tu deuda.'
     return render(request, 'deudas.html', {
-            'mostrarAdmin': request.user.is_staff,
-            'mostrar_filtro': False,
-            'deuda': Deuda.objects.get(pk=id),
-            'titulo': titulo,
-            'descripcion': descripcion
+        'is_admin': request.user.is_staff,
+        'mostrarAdmin': mostrarAdmin,
+        'mostrar_filtro': False,
+        'deuda': Deuda.objects.get(pk=id),
+        'titulo': titulo,
+        'descripcion': descripcion
     })
