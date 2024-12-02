@@ -1,7 +1,7 @@
 {% load static %}
 <nav class="navbar">
     <div class="logo">
-        <img src="/media/icons/logo.png" alt="Logo" style="height: 80px;">
+        <img src="{% static '/img/logo.png' %}" alt="Logo" style="height: 80px;">
         <span>Librería Marie</span>
     </div>
     <form class="search-bar" method="GET" action="{% url 'inicio' %}">
