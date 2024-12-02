@@ -54,27 +54,68 @@ def buscar_productos(request):
         })
 
 def deudas(request):
+    ruta = request.path.split('/')
     if not request.user.is_authenticated:
         return redirect('inicio')
+    if ruta[2] == 'admin':
+        if not request.user.is_staff:
+            return redirect('deudas')
     
     busqueda = request.GET.get('q', '')
     ordenarPor = request.GET.get('ordenarPor', 'fecha-agregado')
 
-    deudas = request.user.deudas.all()
+    if ruta[2] == 'admin':
+        deudas = Deuda.objects.all()
+    else:
+        deudas = request.user.deudas.all()
 
+    deudas = deudas.filter(pagado=False)
+    
     if busqueda != '':
-        deudas = deudas.filter(producto__nombre__icontains=busqueda)
+        deudas = deudas.filter(productos__nombre__icontains=busqueda) # | Q(usuario__username__icontains=busqueda)
     
     if ordenarPor == 'fecha-agregado':
         deudas = deudas.order_by('-fecha')
     elif ordenarPor == 'fecha-antiguo':
         deudas = deudas.order_by('fecha')
     elif ordenarPor == 'monto-mayor':
-        deudas = deudas.order_by('-monto')
+        deudas = deudas.order_by('-monto_total')
     elif ordenarPor == 'monto-menor':
-        deudas = deudas.order_by('monto')
+        deudas = deudas.order_by('monto_total')
     
+    if ruta[2] == 'admin':
+        titulo = 'Deudas de los usuarios'
+        descripcion = 'Aquí puedes ver todas las deudas de los usuarios.'
+    else:
+        titulo = 'Mis deudas'
+        descripcion = 'Aquí puedes ver todas tus deudas pendientes.'
+
     return render(request, 'deudas.html', {
+        'mostrarAdmin': request.user.is_staff,
+        'mostrar_filtro': True,
         'deudas': deudas,
-        'ordenarPor': ordenarPor
+        'busqueda': busqueda,
+        'ordenarPor': ordenarPor,
+        'titulo': titulo,
+        'descripcion': descripcion
+    })
+
+def ver_deuda(request, id):
+    if not request.user.is_authenticated:
+        return redirect('inicio')
+    elif not request.user.is_staff and not Deuda.objects.get(pk=id).usuario == request.user:
+        return redirect('deudas')
+    
+    if request.user.is_staff:
+        titulo = 'Detalles de la deuda'
+        descripcion = 'Aquí puedes ver los detalles de la deuda.'
+    else:
+        titulo = 'Detalles de tu deuda'
+        descripcion = 'Aquí puedes ver los detalles de tu deuda.'
+    return render(request, 'deudas.html', {
+            'mostrarAdmin': request.user.is_staff,
+            'mostrar_filtro': False,
+            'deuda': Deuda.objects.get(pk=id),
+            'titulo': titulo,
+            'descripcion': descripcion
     })

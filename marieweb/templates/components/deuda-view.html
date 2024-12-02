@@ -1,0 +1,105 @@
+{% load custom_filters %}
+<style>
+    .deuda-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+        margin-bottom: 20px;
+    }
+
+    .deuda-container h1 {
+        text-align: center;
+        color: #333;
+    }
+
+    .productos-lista {
+        margin-top: 20px;
+    }
+
+    .productos-lista h2 {
+        color: #555;
+    }
+
+    .productos-lista ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .producto-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #fff;
+    }
+
+    .producto-item img {
+        width: 100px;
+        height: 100px;
+        margin-right: 20px;
+        border-radius: 5px;
+        object-fit: contain;
+    }
+
+    .producto-detalle p {
+        margin: 5px 0;
+        color: #666;
+    }
+
+    .total-monto {
+        text-align: right;
+        margin-top: 20px;
+        font-size: 1.2em;
+        color: #333;
+    }
+
+    .pagar-boton {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .pagar-boton button {
+        padding: 10px 20px;
+        font-size: 1em;
+        color: #fff;
+        background-color: #28a745;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .pagar-boton button:hover {
+        background-color: #218838;
+    }
+</style>
+<div class="deuda-container">
+    <h1>Orden de Deuda</h1>
+    <p>Deuda N° #{{ deuda.id }}</p>
+    <p>Fecha de creación: {{ deuda.fecha|date:"d/m/Y" }} a las {{ deuda.fecha|time:"H:i" }}</p>
+    <div class="productos-lista">
+        <h2>Productos</h2>
+        <ul>
+            {% for producto in deuda.productos.all %}
+            <li class="producto-item">
+                <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                <div class="producto-detalle">
+                    <p>Nombre: {{ producto.nombre }}</p>
+                    <p>Cantidad: {{ deuda.cantidad_productos|get_item:producto.pk }}</p>
+                    <p>Monto: ${{ producto.precio }}</p>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="total-monto">
+        <h3>Total: ${{ deuda.monto_total }}</h3>
+    </div>
+    <div class="pagar-boton">
+        <button onclick="location.href=''">Pagar</button>
+    </div>
+</div>

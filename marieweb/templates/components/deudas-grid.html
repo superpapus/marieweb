@@ -1,22 +1,119 @@
 <style>
     .grid-deudas {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        /* grid-template-columns: repeat(4, 1fr); */
         gap: 10px;
         padding: 10px;
     }
     .deuda-card {
+        display: grid;
+        grid-template-rows: 1fr auto;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        grid-template-areas: 
+            "id usuario metodo-pago etiqueta fecha"
+            "img img img monto pagar"; 
         background-color: #f2f2f2;
-        padding: 20px;
+        padding: 14px;
         text-align: center;
         border: 1px solid #ddd;
         border-radius: 10px;
+        height: fit-content;
+    }
+    .etiqueta {
+        grid-area: etiqueta;
+        padding: 5px 20px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 16px;
+        width: 100px;
+        height: fit-content;
+    }
+    .etiqueta-pagado {
+        background-color: #cce6cc;
+        color: #339933; 
+    }
+    .etiqueta-nopagado {
+        background-color: #ffcccc;
+        color: #ff3333;
+    }
+    .imagenes {
+        grid-area: img;
+        display: flex;
+        justify-content: left;
+        gap: 10px;
+        padding-top: 10px;
+    }
+    .deuda-card img {
+        width: 50px;
+        height: 50px;
+        object-fit: contain;
+        border-radius: 10px;
+    }
+    .masproductos {
+        width: 50px;
+        height: 50px;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 10px;
+        color: white;
+        font-weight: bold;
+    }
+    .monto {
+        grid-area: monto;
+        font-size: 18px;
+        align-content: end;
+        justify-self: left;
+    }
+    .deuda-card button {
+        grid-area: pagar;
+        width: fit-content;
+        height: fit-content;
+        justify-self: center;
+        align-self: end;
+        background-color: #4CAF50;
+        color: white;
+        font-weight: bold;
+        font-size: 16px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
     }
 </style>
 <section class="grid-deudas">
     {% for deuda in deudas %}
     <div class="deuda-card">
-        {{ deuda.producto.nombre }} - A pagar: ${{ deuda.monto }}
+        <p style="grid-area: id; font-weight: bold; font-size: 16px; justify-self: left;">Deuda #{{ deuda.pk }}</p>
+        <p style="grid-area: usuario;">{{ deuda.usuario.username }}</p>
+        <p style="grid-area: metodo-pago;">{% if deuda.metodo_pago %}{{ deuda.metodo_pago }}{% else %}Sin metodo de pago{% endif %}</p>
+        {% if deuda.pagado %}
+        <div class="etiqueta etiqueta-pagado">
+            <label>Pagado</label>
+        </div>
+        {% else %}
+        <div class="etiqueta etiqueta-nopagado">
+            <label>No pagado</label>
+        </div>
+        {% endif %}
+        <p style="grid-area: fecha;">Agregado el {{ deuda.fecha|date:"d/m/Y" }}</p>
+        <div class="imagenes">
+            {% for producto in deuda.productos.all|slice:":4" %}
+            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+            {% endfor %}
+            {% if deuda.productos.all|length > 4 %}
+            <div class="masproductos">
+                <label>+{{ deuda.productos.all|length|add:"-4" }}</label>
+            </div>
+            {% endif %}
+        </div>
+        {% if deuda.pagado %}
+        <p class="monto">Monto pagado: <label>${{ deuda.monto_total }}</label></p>
+        {% else %}
+        <p class="monto">Monto a pagar: <label style="color: #ff3333; font-weight: bold;">${{ deuda.monto_total }}</label></p>
+        <button onclick="location.href='ver/{{ deuda.pk }}'">Pagar</button>
+        {% endif %}
     </div>
     {% endfor %}
 </section>

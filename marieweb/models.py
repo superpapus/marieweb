@@ -20,16 +20,18 @@ class Producto(models.Model):
     enabled = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.nombre
+        return f"#{self.pk} - {self.nombre}"
 
 class Deuda(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE, default=None, blank=False, null=False, related_name='deudas')
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
-    monto = models.IntegerField(default=0)
-    cantidad = models.PositiveIntegerField(default=1)
+    productos = models.ManyToManyField(Producto)
+    cantidad_productos = models.JSONField(default=dict)
+    monto_total = models.IntegerField(default=0)
     fecha = models.DateTimeField(auto_now_add=True)
+    fecha_limite = models.DateTimeField(blank=True, null=True)
     pagado = models.BooleanField(default=False)
     fechaPago = models.DateTimeField(blank=True, null=True)
+    metodo_pago = models.CharField(max_length=100, blank=True, null=True)
     
     def __str__(self):
-        return self.usuario.username + ' - ' + self.producto.nombre
+        return f"#{str(self.pk)} - {self.usuario.username} - {self.fecha}"
