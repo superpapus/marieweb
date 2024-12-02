@@ -1,22 +1,30 @@
-<form method="get" action="{% url 'inicio' %}">
+<form method="get" action="{% url 'inicio' %}" class="container d-flex justify-content-center mb-4 mt-4">
     <input type="hidden" name="q" value="{{ query|default:'' }}">
-    <div class="filters">
-        <div class="dropdown">
-            <label for="ordenar">Ordenar Por:</label>
-            <select id="ordenar" name="ordenar" onchange="this.form.submit()">
-                <option value="destacado" {% if ordenar == 'destacado' %}selected{% endif %}>Destacado</option>
-                <option value="menor-precio" {% if ordenar == 'menor-precio' %}selected{% endif %}>Menor Precio</option>
-                <option value="mayor-precio" {% if ordenar == 'mayor-precio' %}selected{% endif %}>Mayor Precio</option>
-            </select>
+
+    <div class="row w-100 mb-3">
+        <!-- Ordenar Por -->
+        <div class="col-12 col-md-4 mb-3">
+            <div class="form-group">
+                <label for="ordenar" class="form-label">Ordenar Por:</label>
+                <select id="ordenar" name="ordenar" class="form-select" onchange="this.form.submit()">
+                    <option value="destacado" {% if ordenar == 'destacado' %}selected{% endif %}>Destacado</option>
+                    <option value="menor-precio" {% if ordenar == 'menor-precio' %}selected{% endif %}>Menor Precio</option>
+                    <option value="mayor-precio" {% if ordenar == 'mayor-precio' %}selected{% endif %}>Mayor Precio</option>
+                </select>
+            </div>
         </div>
-        <div class="dropdown">
-            <label for="filtrar">Filtrar Por:</label>
-            <select id="categoria" name="categoria" onchange="this.form.submit()">
-                <option value="">Todas las Categorías</option>
-                {% for categoria in categorias %}
-                <option value="{{ categoria.id }}" {% if categoria_actual == categoria.id|stringformat:"s" %}selected{% endif %}>{{ categoria.nombre }}</option>
-                {% endfor %}
-            </select>
+
+        <!-- Filtrar Por -->
+        <div class="col-12 col-md-4 mb-3">
+            <div class="form-group">
+                <label for="categoria" class="form-label">Filtrar Por:</label>
+                <select id="categoria" name="categoria" class="form-select" onchange="this.form.submit()">
+                    <option value="">Todas las Categorías</option>
+                    {% for categoria in categorias %}
+                    <option value="{{ categoria.id }}" {% if categoria_actual == categoria.id|stringformat:"s" %}selected{% endif %}>{{ categoria.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
         </div>
     </div>
 </form>
