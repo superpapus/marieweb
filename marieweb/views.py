@@ -1,6 +1,6 @@
 import datetime
-from django.shortcuts import render, redirect
-from .models import Producto, Categoria
+from django.shortcuts import redirect, render
+from .models import Producto, Categoria, Deuda
 from django.contrib import messages
 from django.contrib.auth import login as auth_login, authenticate
 from django.contrib.auth import authenticate, login
@@ -42,27 +42,78 @@ def inicio(request):
         'username': username
         })
 
-def buscar_productos(request):
-    query = request.GET.get('q', '')  # Obtener el término de búsqueda desde la URL
-    categoria_id = request.GET.get('categoria', None)
+def deudas(request):
+    ruta = request.path.split('/')
+    if not request.user.is_authenticated:
+        return redirect('inicio')
+    if ruta[2] == 'admin':
+        if not request.user.is_staff:
+            return redirect('deudas')
     
-    productos = Producto.objects.filter(enabled=True)
+    busqueda = request.GET.get('q', '')
+    ordenarPor = request.GET.get('ordenarPor', 'fecha-agregado')
 
-    if query:
-        productos = Producto.objects.filter(nombre__icontains=query)  # Buscar productos que coincidan
+    if ruta[2] == 'admin':
+        deudas = Deuda.objects.all()
+    else:
+        deudas = request.user.deudas.all()
 
+    if busqueda != '':
+        if ruta[2] == 'admin':
+            deudas = deudas.filter(usuario__username__icontains=busqueda)
+        else:
+            deudas = deudas.filter(productos__nombre__icontains=busqueda)
+    
+    if ordenarPor == 'fecha-agregado':
+        deudas = deudas.order_by('-fecha')
+    elif ordenarPor == 'fecha-antiguo':
+        deudas = deudas.order_by('fecha')
+    elif ordenarPor == 'monto-mayor':
+        deudas = deudas.order_by('-monto_total')
+    elif ordenarPor == 'monto-menor':
+        deudas = deudas.order_by('monto_total')
+    
+    if ruta[2] == 'admin':
+        titulo = 'Deudas de los usuarios'
+        descripcion = 'Aquí puedes ver todas las deudas de los usuarios.'
+    else:
+        titulo = 'Mis deudas'
+        descripcion = 'Aquí puedes ver todas tus deudas pendientes.'
 
-    categorias = Categoria.objects.all()
+    return render(request, 'deudas.html', {
+        'username': request.user.username,
+        'is_admin': request.user.is_staff,
+        'mostrarAdmin': ruta[2] == 'admin',
+        'mostrar_filtro': True,
+        'deudas': deudas,
+        'busqueda': busqueda,
+        'ordenarPor': ordenarPor,
+        'titulo': titulo,
+        'descripcion': descripcion
+    })
 
-    if categoria_id:
-        productos = productos.filter(categoria_id=categoria_id)
-
-    return render(request, 'buscar.html', {
-        'productos': productos, 
-        'query': query,
-        'categorias': categorias, 
-        'categoria_actual': categoria_id,
-        })
+def ver_deuda(request, id):
+    if not request.user.is_authenticated:
+        return redirect('inicio')
+    elif not request.user.is_staff and not Deuda.objects.get(pk=id).usuario == request.user:
+        return redirect('deudas')
+    
+    mostrarAdmin = request.user.is_staff and request.path.split('/')[2] == 'admin'
+    if mostrarAdmin:
+        titulo = 'Detalles de la deuda'
+        descripcion = 'Aquí puedes ver los detalles de la deuda.'
+    else:
+        titulo = 'Detalles de tu deuda'
+        descripcion = 'Aquí puedes ver los detalles de tu deuda.'
+    return render(request, 'deudas.html', {
+        'username': request.user.username,
+        'is_admin': request.user.is_staff,
+        'mostrarAdmin': mostrarAdmin,
+        'mostrar_filtro': False,
+        'deuda': Deuda.objects.get(pk=id),
+        'titulo': titulo,
+        'descripcion': descripcion
+    })
 
 MAX_ATTEMPTS = 6
 BLOCK_TIME = 10

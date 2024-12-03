@@ -5,6 +5,10 @@ from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
     path('', views.inicio, name='inicio'),
+    path('deudas/', views.deudas, name='deudas'),
+    path('deudas/admin/', views.deudas, name='deudas_admin'),
+    path('deudas/ver/<int:id>/', views.ver_deuda, name='ver_deuda'),
+    path('deudas/admin/ver/<int:id>/', views.ver_deuda, name='ver_deuda_admin'),
     path('login/', views.login, name='login'),
     path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
