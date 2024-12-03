@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class="formulario container">
-        <div class="logo"><img src="/media/icons/logo.png" alt="Logo" style="height: 100px;"></div>
+        <div class="logo"><img src="{% static '/img/logo.png' %}" alt="Logo" style="height: 100px;"></div>
         <h1>Iniciar Sesión</h1>
         <form method="POST">
             {% csrf_token %}
