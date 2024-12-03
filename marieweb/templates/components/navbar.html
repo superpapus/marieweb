@@ -1,15 +1,52 @@
 {% load static %}
-<nav class="navbar">
-    <div class="logo">
-        <img src="{% static '/img/logo.png' %}" alt="Logo" style="height: 80px;">
-        <span>Librería Marie</span>
-    </div>
-    <form class="search-bar" method="GET" action="{% url 'inicio' %}">
-        <input type="text" name="q" placeholder="Buscar productos..." value="{{ query|default:'' }}">
-        <input type="hidden" name="ordenar" value="{{ ordenar }}">
-        <button type="submit" class="btn_buscar">Buscar</button>
-    </form>
-    <div class="account">
-        <button class="btn_gestionar">Gestionar Cuenta</button>
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <!-- Logo y Nombre -->
+        <a class="navbar-brand d-flex align-items-center" href="#">
+            <img src="{% static '/img/logo.png' %}" alt="Logo" style="height: 50px;" class="me-2">
+            <span class="fw-bold text-white">Librería Marie</span>
+        </a>
+
+        <!-- Botón de menú (responsive) -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Contenido del Navbar -->
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <!-- Barra de búsqueda -->
+            <form class="d-flex ms-auto me-4" method="GET" action="{% url 'inicio' %}">
+                <input class="form-control me-2" type="search" name="q" placeholder="Buscar productos..." aria-label="Buscar" value="{{ query|default:'' }}">
+                <input type="hidden" name="ordenar" value="{{ ordenar }}">
+                <button class="btn btn-custom" type="submit">Buscar</button>
+            </form>
+
+            <!-- Opciones según el estado del usuario -->
+            {% if username %}
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <span class="nav-link text-white">Hola, <strong>{{ username }}</strong>!</span>
+                </li>
+                <li class="nav-item">
+                    <form action="{% url 'logout' %}" method="post" class="d-inline me-2">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-custom-secondary">Cerrar sesión</button>
+                    </form>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="btn btn-custom text-white ms-2">Gestionar Cuenta</a>
+                </li>
+            </ul>            
+            {% else %}
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <span class="nav-link text-white">Hola, visitante!</span>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'login' %}" class="btn btn-custom">Iniciar Sesión</a>
+                </li>
+            </ul>
+            {% endif %}
+        </div>
     </div>
 </nav>
