@@ -32,4 +32,12 @@
         </a>
     </div>
 
+    {% if user.is_staff %}
+    <div class="account">
+        <a href="{% url 'add_producto' %}">
+            <button type="button" class="btn_gestionar">Agregar Producto</button>
+        </a>
+    </div>
+    {% endif %}
+
 </nav>
