@@ -1,6 +1,6 @@
 import datetime
 from django.shortcuts import redirect, render
-from .models import Producto, Categoria, Deuda
+from .models import Producto, Categoria, Deuda, Encargo
 from django.contrib import messages
 from django.contrib.auth import login as auth_login, authenticate
 from django.contrib.auth import authenticate, login
@@ -8,6 +8,8 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 from django.utils.timezone import now, timedelta
+from .forms import EncargoForm
+
 
 # Create your views here.
 def inicio(request):
@@ -174,3 +176,20 @@ def logout_view(request):
     auth_logout(request)
     messages.success(request, "Has cerrado sesión exitosamente.")
     return redirect('inicio')
+
+def crear_encargo(request):
+    if request.method == 'POST':
+        form = EncargoForm(request.POST)
+        if form.is_valid():
+            encargo = form.save(commit=False)
+            encargo.user = request.user  
+            encargo.save()
+            return redirect('mis_encargos')  
+    else:
+        form = EncargoForm()
+
+    return render(request, 'crear_encargo.html', {'form': form})
+
+def mis_encargos(request):
+    encargos = Encargo.objects.all()  
+    return render(request, 'mis_encargos.html', {'encargos': encargos})

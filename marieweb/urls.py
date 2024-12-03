@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import LogoutView
+from .views import crear_encargo
 
 urlpatterns = [
     path('', views.inicio, name='inicio'),
@@ -15,4 +16,6 @@ urlpatterns = [
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     path('logout/', LogoutView.as_view(), name='logout'),
+    path('crear/', crear_encargo, name='crear_encargo'),
+    path('mis_encargos/', views.mis_encargos, name='mis_encargos'),
 ]
