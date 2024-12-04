@@ -84,6 +84,7 @@
     }
     .deuda-card button:hover {
         background-color: #a6d7a8;
+        color: #4CAF50;
     }
     @media screen and (max-width: 768px) {
         #deudasid, .imagenes {
@@ -154,7 +155,7 @@
         <p class="monto">Monto pagado: <label>${{ deuda.monto_total }}</label></p>
         {% else %}
         <p class="monto">Monto a pagar: <label style="color: #ff3333; font-weight: bold;">${{ deuda.monto_total }}</label></p>
-        <button class="btn" onclick="location.href='ver/{{ deuda.pk }}'">Pagar</button>
+        <button class="btn" onclick="location.href='ver/{{ deuda.pk }}'">Ver Deuda</button>
         {% endif %}
     </div>
     {% endif %}

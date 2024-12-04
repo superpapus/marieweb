@@ -145,8 +145,12 @@ def deudas(request):
 
     if ruta[2] == 'admin':
         deudas = Deuda.objects.all()
+        productos = Producto.objects.all()
+        usuarios = User.objects.all()
     else:
         deudas = request.user.deudas.all()
+        productos = None
+        usuarios = None
 
     if busqueda != '':
         if ruta[2] == 'admin':
@@ -179,7 +183,9 @@ def deudas(request):
         'busqueda': busqueda,
         'ordenarPor': ordenarPor,
         'titulo': titulo,
-        'descripcion': descripcion
+        'descripcion': descripcion,
+        'productos': productos,
+        'usuarios': usuarios
     })
 
 def ver_deuda(request, id):
