@@ -1,4 +1,5 @@
 import datetime
+import json
 from django.shortcuts import get_object_or_404, redirect, render
 from .models import Producto, Categoria, Deuda, Encargo
 from django.contrib import messages
@@ -210,6 +211,33 @@ def ver_deuda(request, id):
         'titulo': titulo,
         'descripcion': descripcion
     })
+def guardar_deuda(request):
+    if request.user.is_staff and request.method == 'POST':
+        productos_json = request.POST.get('productos_json')
+        usuario_id = request.POST.get('deuda-usuario')
+        if not usuario_id or not productos_json:
+            messages.error(request, 'Complete todos los campos.')
+            return redirect('deudas_admin')
+
+        productos_dict = json.loads(productos_json)  # Convertir el JSON a un diccionario
+
+        deuda = Deuda.objects.create(usuario=User.objects.get(pk=usuario_id))
+
+        productos_seleccionados = Producto.objects.filter(pk__in=productos_dict.keys())
+        deuda.productos.add(*productos_seleccionados)
+        deuda.cantidad_productos = productos_dict
+
+        # Calcular el monto total
+        total = 0
+        for producto_id, cantidad in productos_dict.items():
+            producto = Producto.objects.get(pk=producto_id)
+            total += producto.precio * cantidad
+
+        deuda.monto_total = total
+        deuda.save()
+
+    
+    return redirect('deudas_admin')
 
 MAX_ATTEMPTS = 6
 BLOCK_TIME = 10
