@@ -94,7 +94,20 @@ def add_producto(request):
         stock = request.POST.get('stock')
         categoria_id = request.POST.get('categoria')
         enabled = request.POST.get('enabled') == 'on'
-        imagen = request.FILES.get('imagen', None)
+        imagen = request.FILES.get('imagen')
+
+        if not imagen:
+            messages.error(request, 'La imagen es obligatoria.')
+            categorias = Categoria.objects.all()
+            return render(request, 'add_producto.html', {
+                'categorias': categorias,
+                'nombre': nombre,
+                'descripcion': descripcion,
+                'precio': precio,
+                'stock': stock,
+                'categoria_id': categoria_id,
+                'enabled': enabled,
+            })
         
         categoria = get_object_or_404(Categoria, id=categoria_id)
         
