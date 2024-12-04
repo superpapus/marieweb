@@ -116,6 +116,7 @@
 </style>
 <section class="grid-deudas">
     <div id="deudasid" class="deuda-card">
+    <div id="deudasid" class="deuda-card">
         <p style="grid-area: id; font-weight: bold; font-size: 16px; justify-self: left;">ID</p>
         <p style="grid-area: usuario;">Usuario</p>
         <p style="grid-area: metodo-pago;">Método de pago</p>
@@ -129,6 +130,7 @@
     {% if pagado == deuda.pagado %}
     <div class="deuda-card">
         <p style="grid-area: id; font-weight: bold; font-size: 16px; justify-self: left;">Deuda #{{ deuda.pk }}</p>
+        <p class="usuario" style="grid-area: usuario;">{{ deuda.usuario.username }}</p>
         <p class="usuario" style="grid-area: usuario;">{{ deuda.usuario.username }}</p>
         <p style="grid-area: metodo-pago;">{% if deuda.metodo_pago %}{{ deuda.metodo_pago }}{% else %}Sin metodo de pago{% endif %}</p>
         {% if deuda.pagado %}
