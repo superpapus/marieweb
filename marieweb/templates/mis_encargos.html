@@ -1,0 +1,43 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Pedidos</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/mis_encargos.css' %}">
+</head>
+<body>
+
+    <div class="mis-encargos-container">
+        <h1>Mis Pedidos</h1>
+        {% if encargos %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Fecha entrega</th>
+                        <th>Estado</th>
+                        <th>Comentarios</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for encargo in encargos %}
+                    <tr>
+                        <td>{{ encargo.encargo_nombre_producto }}</td>
+                        <td>{{ encargo.encargo_cantidad_producto }}</td>
+                        <td>{{ encargo.encargo_fecha }}</td>
+                        <td>{{ encargo.get_encargo_estado_display }}</td>
+                        <td>{{ encargo.encargo_comentario_extra }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No tienes encargos.</p>
+        {% endif %}
+</body>
+</html>
+

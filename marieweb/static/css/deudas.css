@@ -1,0 +1,141 @@
+.container {
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: 1fr 5fr;
+    grid-template-areas: "sidebar main";
+    padding-top: 20px;
+}
+
+.sidebar {
+    grid-area: sidebar;
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+}
+
+.sidebar-items {
+    position: sticky;
+    top: 20px;
+    padding-left: 20px;
+}
+
+.sidebar-items a {
+    width: fit-content;
+    text-decoration: none;
+}
+
+.sidebar-item {
+    max-width: 200px;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px; 
+    background-color: #f0f0f0;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-weight: bold;
+    font-size: 14px;
+    color: #450920;
+}
+
+.sidebar-item:hover {
+    background-color: #e0e0e0;
+}
+
+.sidebar-item.active {
+    background-color: #e0e0e0;
+}
+
+.content-deudas {
+    grid-area: main;
+    margin: 0 20px 20px 20px;
+}
+
+.sort-section {
+    display: flex;
+    background-color: #DA627D;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    position: sticky;
+    top: 20px;
+    align-items: center;
+}
+
+.sort-section input {
+    width: min(100%, 300px);
+    padding: 5px;
+    font-size: 14px;
+    border: 2px solid #DA627D;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #450920;
+}
+
+.btn_buscar-deudas {
+    padding: 5px 10px;
+    background-color: transparent;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.sort-section label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #F9DBBD;
+    margin-right: 10px;
+}
+
+.sort-section select {
+    width: 200px;
+    padding: 5px;
+    font-size: 14px;
+    border: 2px solid #DA627D;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #450920; 
+    cursor: pointer;
+}
+
+.sort-section select:focus {
+    border-color: #A53260;
+    outline: none;
+}
+
+@media (max-width: 992px) {
+    .btn_buscar-deudas {
+        width: 0;
+    }
+    .sort-section input {
+        width: min(100%, 200px);
+    }
+    .sort-section label {
+        padding-left: 10px;
+    }
+    .container {
+        grid-template-columns: auto;
+        grid-template-areas: "sidebar" "main";
+    }
+    .sidebar {
+        width: 100%;
+    }
+    .sidebar-items {
+        display: flex;
+        overflow-x: auto;
+    }
+    .sidebar-item {
+        margin-right: 10px;
+    }
+    .sort-section {
+        flex-wrap: wrap;
+    }
+    .sort-section input,
+    .sort-section .btn_buscar-deudas,
+    .sort-section label,
+    .sort-section select {
+        flex: 1 1 auto;
+        margin-bottom: 10px;
+    }
+}

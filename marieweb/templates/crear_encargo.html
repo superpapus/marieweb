@@ -1,0 +1,25 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Encargo</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}">
+</head>
+<body>
+    <div class="encargo-form-container">
+        <h1>Crear Encargo</h1>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.as_p }}
+            </div>
+            <button type="submit" class="btn-submit">Enviar</button>
+        </form>
+    </div>
+</body>
+</html>
+
+

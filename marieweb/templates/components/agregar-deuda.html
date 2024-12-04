@@ -1,0 +1,205 @@
+<style>
+    /* Estilos básicos */
+    .card {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        align-items: center;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        padding: 0px;
+        background-color: #ffffff;
+        max-width: 100%;
+    }
+    .card img {
+        width: 50px;
+        height: 50px;
+        border-radius: 5px;
+        margin-right: 15px;
+    }
+    .card .card-body {
+        display: flex;
+        flex-direction: column;
+    }
+    .card .card-body h5 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: bold;
+    }
+    .card .card-body p {
+        margin: 0;
+        font-size: 14px;
+    }
+    .card .card-body input {
+        margin-top: 10px;
+        padding: 5px;
+    }
+    .modal-body select {
+        margin-bottom: 20px;
+    }
+</style>
+
+<!-- Modal -->
+<div class="modal fade" id="agregarDeuda" tabindex="-1" aria-labelledby="agregarDeudaLabel" aria-hidden="true">
+<div class="modal-dialog">
+<div class="modal-content">
+    <div class="modal-header">
+        <h1 class="modal-title fs-5" id="agregarDeudaLabel">Agregar producto</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+    </div>
+    <div class="modal-body">
+            <!-- input -->
+            <!-- <div class="mb-3">
+                <label for="input1" class="form-label">Campo de texto 1</label>
+                <input type="text" class="form-control" id="input1" placeholder="Ingrese texto">
+            </div> -->
+            <!-- Selector de usuario -->
+            <div class="mb-3">
+                <label for="usuarioSelect" class="form-label">Selecciona un usuario</label>
+                <select class="form-select" id="usuarioSelect" name="deuda-usuario">
+                    <option selected disabled>Seleccione...</option>
+                    {% for usuario in usuarios %}
+                    <option value="{{ usuario.pk }}">{{ usuario }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- Selector de productos -->
+            <div class="mb-3">
+            <label for="multipleSelect" class="form-label">Seleccionar productos</label>
+            <select multiple class="form-select" id="multipleSelect" onchange="mostrarSeleccion()">
+                {% for producto in productos %}
+                <option value="{{ producto.pk }}" data-nombre="{{ producto.nombre }}"
+                    data-imagen="{{ producto.imagen.url }}" data-precio="{{ producto.precio }}">{{ producto }}</option>
+                {% endfor %}
+            </select>
+            </div>
+            <!-- Contenedor de productos seleccionados -->
+            <div id="modal_productos" class="productos_seleccionados">
+                Aquí aparecerán los productos seleccionados.
+            </div>
+
+            <!-- Casilla de verificación -->
+            <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="checkbox">
+            <label class="form-check-label" for="checkbox">Deuda Pagada</label>
+            </div>
+
+            <!-- Selector de fecha -->
+            <!-- <div class="mb-3">
+            <label for="datePicker" class="form-label">Selecciona una fecha limite</label>
+            <input type="date" class="form-control" id="datePicker">
+            </div> -->
+            <div id="totalSection">
+                <h4>Total: $<span id="totalAmount">0.00</span></h4>
+            </div>
+        </div>
+        <form class="modal-footer" id="formGuardar" method="POST" action="{% url 'guardar_deuda' %}">
+            {% csrf_token %}
+            <input type="hidden" name="productos_json" id="productosJsonInput">
+            <input type="hidden" name="deuda-usuario" id="usuarioInput">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" id="guardarBtn" class="btn btn-primary">Guardar</button>
+        </form>
+</div>
+</div>
+</div>
+<script>
+    function mostrarSeleccion() {
+        var select = document.getElementById("multipleSelect");
+        var modal_productos = document.getElementById("modal_productos");
+        var totalAmountElement = document.getElementById("totalAmount");
+
+        modal_productos.innerHTML = "";
+        var total = 0;
+
+        // Obtener todas las opciones seleccionadas
+        var selectedOptions = Array.from(select.selectedOptions);
+
+        // Objeto para almacenar las cantidades de los productos seleccionados en formato JSON
+        var productosSeleccionados = {};
+
+        // Iterar sobre las opciones seleccionadas
+        selectedOptions.forEach(option => {
+            var productoId = option.value;
+            var productoNombre = option.getAttribute("data-nombre");
+            var productoImagen = option.getAttribute("data-imagen");
+            var productoPrecio = parseFloat(option.getAttribute("data-precio"));
+
+            // Crear una card para cada producto seleccionado
+            var card = document.createElement("div");
+            card.classList.add("card");
+
+            var img = document.createElement("img");
+            img.src = productoImagen;
+
+            // Crear el cuerpo de la card
+            var cardBody = document.createElement("div");
+            cardBody.classList.add("card-body");
+
+            var name = document.createElement("h5");
+            name.textContent = productoNombre;
+            var price = document.createElement("p");
+            price.textContent = "Precio: $" + productoPrecio;
+
+            // Agregar el input para la cantidad
+            var quantityInput = document.createElement("input");
+            quantityInput.type = "number";
+            quantityInput.min = "1";
+            quantityInput.value = "1";
+            quantityInput.id = "cantidad_" + productoId;
+            quantityInput.oninput = function() {
+                // Cuando se cambie la cantidad, recalcular el total y actualizar el JSON
+                actualizarTotal();
+                productosSeleccionados[productoId] = parseInt(quantityInput.value);
+            };
+
+            // Añadir todo al cuerpo de la card
+            cardBody.appendChild(name);
+            cardBody.appendChild(price);
+            cardBody.appendChild(quantityInput);
+
+            // Añadir la imagen y el cuerpo de la card al contenedor de la card
+            card.appendChild(img);
+            card.appendChild(cardBody);
+
+            // Añadir la card al contenedor de modal_productoss
+            modal_productos.appendChild(card);
+
+            // Inicialmente sumamos el total con la cantidad por defecto (1)
+            total += productoPrecio;
+
+            // Guardar el producto y su cantidad por defecto en el JSON
+            productosSeleccionados[productoId] = 1;
+
+            actualizarTotal();
+            productosSeleccionados[productoId] = parseInt(quantityInput.value);
+        });
+
+        // Función para actualizar el total
+        function actualizarTotal() {
+            total = 0;
+
+            // Recorremos todas las cards y sumamos el total de los productos seleccionados
+            var inputs = document.querySelectorAll(".card-body input");
+            inputs.forEach(input => {
+                var cantidad = parseInt(input.value);
+                var card = input.closest('.card');
+                var precio = parseFloat(card.querySelector("p").textContent.replace("Precio: $", ""));
+                total += cantidad * precio;
+            });
+
+            // Actualizamos el total mostrado en la sección del total
+            totalAmountElement.textContent = total.toFixed(2);
+        }
+
+        // Función para guardar el JSON en el campo oculto antes de enviar el formulario
+        document.getElementById('formGuardar').onsubmit = function() {
+            // Convertimos el objeto productosSeleccionados a JSON
+            document.getElementById('productosJsonInput').value = JSON.stringify(productosSeleccionados);
+
+            // Guardamos el usuario seleccionado en el campo oculto
+            var usuarioSelect = document.getElementById('usuarioSelect');
+            document.getElementById('usuarioInput').value = usuarioSelect.value;
+        };
+    }
+</script>
