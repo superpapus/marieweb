@@ -105,6 +105,12 @@
 }
 
 @media (max-width: 992px) {
+    .btn_buscar-deudas {
+        display: none;
+    }
+    .sort-section label {
+        padding-left: 10px;
+    }
     .container {
         grid-template-columns: 1fr;
         grid-template-areas: "sidebar" "main";
@@ -119,5 +125,14 @@
     .sidebar-item {
         margin-right: 10px;
     }
-    
+    .sort-section {
+        flex-wrap: wrap;
+    }
+    .sort-section input,
+    .sort-section .btn_buscar-deudas,
+    .sort-section label,
+    .sort-section select {
+        flex: 1 1 auto;
+        margin-bottom: 10px;
+    }
 }
