@@ -48,7 +48,6 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
     </div>
     <div class="modal-body">
-        <form>
             <!-- input -->
             <!-- <div class="mb-3">
                 <label for="input1" class="form-label">Campo de texto 1</label>
@@ -56,8 +55,8 @@
             </div> -->
             <!-- Selector de usuario -->
             <div class="mb-3">
-                <label for="dropdown" class="form-label">Selecciona un usuario</label>
-                <select class="form-select" id="dropdown">
+                <label for="usuarioSelect" class="form-label">Selecciona un usuario</label>
+                <select class="form-select" id="usuarioSelect" name="deuda-usuario">
                     <option selected disabled>Seleccione...</option>
                     {% for usuario in usuarios %}
                     <option value="{{ usuario.pk }}">{{ usuario }}</option>
@@ -90,12 +89,17 @@
             <label for="datePicker" class="form-label">Selecciona una fecha limite</label>
             <input type="date" class="form-control" id="datePicker">
             </div> -->
+            <div id="totalSection">
+                <h4>Total: $<span id="totalAmount">0.00</span></h4>
+            </div>
+        </div>
+        <form class="modal-footer" id="formGuardar" method="POST" action="{% url 'guardar_deuda' %}">
+            {% csrf_token %}
+            <input type="hidden" name="productos_json" id="productosJsonInput">
+            <input type="hidden" name="deuda-usuario" id="usuarioInput">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" id="guardarBtn" class="btn btn-primary">Guardar</button>
         </form>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-primary">Guardar</button>
-    </div>
 </div>
 </div>
 </div>
@@ -110,6 +114,9 @@
 
         // Obtener todas las opciones seleccionadas
         var selectedOptions = Array.from(select.selectedOptions);
+
+        // Objeto para almacenar las cantidades de los productos seleccionados en formato JSON
+        var productosSeleccionados = {};
 
         // Iterar sobre las opciones seleccionadas
         selectedOptions.forEach(option => {
@@ -141,8 +148,9 @@
             quantityInput.value = "1";
             quantityInput.id = "cantidad_" + productoId;
             quantityInput.oninput = function() {
-                // Cuando se cambie la cantidad, recalcular el total
+                // Cuando se cambie la cantidad, recalcular el total y actualizar el JSON
                 actualizarTotal();
+                productosSeleccionados[productoId] = parseInt(quantityInput.value);
             };
 
             // Añadir todo al cuerpo de la card
@@ -159,6 +167,12 @@
 
             // Inicialmente sumamos el total con la cantidad por defecto (1)
             total += productoPrecio;
+
+            // Guardar el producto y su cantidad por defecto en el JSON
+            productosSeleccionados[productoId] = 1;
+
+            actualizarTotal();
+            productosSeleccionados[productoId] = parseInt(quantityInput.value);
         });
 
         // Función para actualizar el total
@@ -177,5 +191,15 @@
             // Actualizamos el total mostrado en la sección del total
             totalAmountElement.textContent = total.toFixed(2);
         }
+
+        // Función para guardar el JSON en el campo oculto antes de enviar el formulario
+        document.getElementById('formGuardar').onsubmit = function() {
+            // Convertimos el objeto productosSeleccionados a JSON
+            document.getElementById('productosJsonInput').value = JSON.stringify(productosSeleccionados);
+
+            // Guardamos el usuario seleccionado en el campo oculto
+            var usuarioSelect = document.getElementById('usuarioSelect');
+            document.getElementById('usuarioInput').value = usuarioSelect.value;
+        };
     }
 </script>
