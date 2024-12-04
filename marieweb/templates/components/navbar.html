@@ -29,6 +29,13 @@
                     <button class="btn btn-custom">Mis Pedidos</button>
                 </a>
             </div>
+            {% if user.is_staff %}
+            <div class="account" style="margin: 0 10px 0 10px;">
+                <a href="{% url 'add_producto' %}">
+                    <button type="button" class="btn btn-custom">Agregar Producto</button>
+                </a>
+            </div>
+            {% endif %}
             <!-- Opciones según el estado del usuario -->
             {% if username %}
             <ul class="navbar-nav">

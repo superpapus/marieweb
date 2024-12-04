@@ -1,5 +1,5 @@
 import datetime
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from .models import Producto, Categoria, Deuda, Encargo
 from django.contrib import messages
 from django.contrib.auth import login as auth_login, authenticate
@@ -43,6 +43,77 @@ def inicio(request):
         'query': query,
         'username': username
         })
+
+def gestionar_productos(request, producto_id=None):
+    producto = None
+    if producto_id:
+        producto = get_object_or_404(Producto, id=producto_id)
+    
+    if request.method == 'POST':
+        
+        if 'delete' in request.POST:
+            if producto:
+                producto.delete()
+                messages.success(request, 'Producto eliminado exitosamente.')
+            return redirect('inicio')
+
+        nombre = request.POST.get('nombre')
+        descripcion = request.POST.get('descripcion')
+        precio = request.POST.get('precio')
+        stock = request.POST.get('stock')
+        enabled = request.POST.get('enabled') == 'on'
+        
+        if producto:
+            producto.nombre = nombre
+            producto.descripcion = descripcion
+            producto.precio = precio
+            producto.stock = stock
+            producto.enabled = enabled
+            producto.save()
+            messages.success(request, 'Producto actualizado exitosamente.')
+        else:
+            Producto.objects.create(
+                nombre=nombre,
+                descripcion=descripcion,
+                precio=precio,
+                stock=stock,
+                enabled=enabled
+            )
+            messages.success(request, 'Producto creado exitosamente.')
+        return redirect('gestionar_productos', producto_id=producto.id if producto else None)
+    
+    return render(request, 'gestionar_productos.html', {
+        'producto': producto
+    })
+
+def add_producto(request):
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        descripcion = request.POST.get('descripcion')
+        precio = request.POST.get('precio')
+        stock = request.POST.get('stock')
+        categoria_id = request.POST.get('categoria')
+        enabled = request.POST.get('enabled') == 'on'
+        imagen = request.FILES.get('imagen', None)
+        
+        categoria = get_object_or_404(Categoria, id=categoria_id)
+        
+        Producto.objects.create(
+            nombre=nombre,
+            descripcion=descripcion,
+            precio=precio,
+            stock=stock,
+            categoria=categoria,
+            enabled=enabled,
+            imagen=imagen
+        )
+        messages.success(request, 'Producto creado exitosamente.')
+        return redirect('inicio')
+    
+    categorias = Categoria.objects.all()
+    return render(request, 'add_producto.html', {
+        'categorias': categorias
+    })
 
 def deudas(request):
     ruta = request.path.split('/')

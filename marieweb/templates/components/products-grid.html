@@ -14,9 +14,12 @@
                     <div class="mt-auto">
                         <button type="button" class="btn btn-custom">Agregar al carrito</button>
                     </div>
+                    {% if user.is_staff %}
+                    <a href="{% url 'gestionar_productos' producto.id %}" class="btn btn-custom" style="margin-top: 10px;">Editar Producto</a>
+                    {% endif %}
                 </div>
             </div>
-        </div>
+    </div>
         {% empty %}
         <div class="container d-flex flex-column align-items-center justify-content-center min-vh-100 text-center">
             <img src="{% static '/img/error.png' %}" alt="Error img" class="img-fluid" style="max-width: 300px; height: auto;">

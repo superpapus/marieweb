@@ -18,4 +18,6 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     path('crear/', crear_encargo, name='crear_encargo'),
     path('mis_encargos/', views.mis_encargos, name='mis_encargos'),
+    path('gestionar_productos/<int:producto_id>/', views.gestionar_productos, name='gestionar_productos'),
+    path('add_producto/', views.add_producto, name='add_producto'),
 ]
