@@ -62,6 +62,19 @@ def gestionar_productos(request, producto_id=None):
         precio = request.POST.get('precio')
         stock = request.POST.get('stock')
         enabled = request.POST.get('enabled') == 'on'
+
+        if not nombre or not precio or not stock:
+            messages.error(request, 'Complete todos los campos.')
+            categorias = Categoria.objects.all()
+            return render(request, 'gestionar_productos.html', {
+                'producto': producto,
+                'categorias': categorias,
+                'nombre': nombre,
+                'descripcion': descripcion,
+                'precio': precio,
+                'stock': stock,
+                'enabled': enabled,
+            })
         
         if producto:
             producto.nombre = nombre
@@ -71,15 +84,6 @@ def gestionar_productos(request, producto_id=None):
             producto.enabled = enabled
             producto.save()
             messages.success(request, 'Producto actualizado exitosamente.')
-        else:
-            Producto.objects.create(
-                nombre=nombre,
-                descripcion=descripcion,
-                precio=precio,
-                stock=stock,
-                enabled=enabled
-            )
-            messages.success(request, 'Producto creado exitosamente.')
         return redirect('gestionar_productos', producto_id=producto.id if producto else None)
     
     return render(request, 'gestionar_productos.html', {
@@ -96,8 +100,8 @@ def add_producto(request):
         enabled = request.POST.get('enabled') == 'on'
         imagen = request.FILES.get('imagen')
 
-        if not imagen:
-            messages.error(request, 'La imagen es obligatoria.')
+        if not imagen or not nombre or not precio or not stock:
+            messages.error(request, 'Complete todos los campos.')
             categorias = Categoria.objects.all()
             return render(request, 'add_producto.html', {
                 'categorias': categorias,
