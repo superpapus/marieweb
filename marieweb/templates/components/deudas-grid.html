@@ -84,6 +84,7 @@
     }
     .deuda-card button:hover {
         background-color: #a6d7a8;
+        color: #4CAF50;
     }
     @media screen and (max-width: 768px) {
         #deudasid, .imagenes {
@@ -115,6 +116,7 @@
 </style>
 <section class="grid-deudas">
     <div id="deudasid" class="deuda-card">
+    <div id="deudasid" class="deuda-card">
         <p style="grid-area: id; font-weight: bold; font-size: 16px; justify-self: left;">ID</p>
         <p style="grid-area: usuario;">Usuario</p>
         <p style="grid-area: metodo-pago;">Método de pago</p>
@@ -128,6 +130,7 @@
     {% if pagado == deuda.pagado %}
     <div class="deuda-card">
         <p style="grid-area: id; font-weight: bold; font-size: 16px; justify-self: left;">Deuda #{{ deuda.pk }}</p>
+        <p class="usuario" style="grid-area: usuario;">{{ deuda.usuario.username }}</p>
         <p class="usuario" style="grid-area: usuario;">{{ deuda.usuario.username }}</p>
         <p style="grid-area: metodo-pago;">{% if deuda.metodo_pago %}{{ deuda.metodo_pago }}{% else %}Sin metodo de pago{% endif %}</p>
         {% if deuda.pagado %}
@@ -154,7 +157,7 @@
         <p class="monto">Monto pagado: <label>${{ deuda.monto_total }}</label></p>
         {% else %}
         <p class="monto">Monto a pagar: <label style="color: #ff3333; font-weight: bold;">${{ deuda.monto_total }}</label></p>
-        <button class="btn" onclick="location.href='ver/{{ deuda.pk }}'">Pagar</button>
+        <button class="btn" onclick="location.href='ver/{{ deuda.pk }}'">Ver Deuda</button>
         {% endif %}
     </div>
     {% endif %}
