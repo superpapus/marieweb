@@ -8,7 +8,9 @@
 </head>
 <body>
     <div class="formulario container">
-        <div class="logo"><img src="/static/img/logo.png" alt="Logo"></div>
+        <div class="logo">
+            <a href="{% url 'inicio' %}"><img src="/static/img/logo.png" alt="Logo"></a>
+        </div>
         <h1>{% if producto %}Editar Producto{% else %}Crear Producto{% endif %}</h1>
         {% if messages %}
             <div class="messages">
