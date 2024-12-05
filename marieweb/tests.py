@@ -1,9 +1,13 @@
+from io import BytesIO
+from django.core.files.uploadedfile import SimpleUploadedFile
+from PIL import Image
 from django.test import TestCase, Client
 from django.urls import reverse
-from marieweb.models import Encargo
+from marieweb.models import Categoria, Encargo, Producto
 from django.contrib.auth.models import User
-from datetime import date 
-
+from datetime import date
+from time import time
+from rest_framework.test import APITestCase
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
@@ -132,3 +136,114 @@ class AuthTests(TestCase):
         response = self.client.post(self.logout_url)
         self.assertEqual(response.status_code, 302)  
         self.assertNotIn("_auth_user_id", self.client.session)  
+
+
+#-------Tests #21 Gestionar Existencia de Productos--------#
+
+class TestAgregarProducto(APITestCase):
+    def setUp(self):
+        # Crear un usuario y autenticarse
+        self.client = Client()
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.client.login(username='testuser', password='12345')
+
+        # Crear una categoría para pruebas
+        self.categoria = Categoria.objects.create(nombre="Libros")
+    
+    def create_test_image(self):
+        file = BytesIO()
+        image = Image.new('RGB', (100, 100), 'white')
+        image.save(file, 'jpeg')
+        file.seek(0)
+        return SimpleUploadedFile('test_image.jpg', file.read(), content_type='image/jpeg')
+
+    def test_agregar_producto(self):
+        url = reverse('add_producto')
+        data = {
+            "nombre": "Babel",
+            "precio": 100,
+            "descripcion": "Babel libro",
+            "stock": 5,
+            "categoria": self.categoria.id,
+            "enabled": True,
+            "imagen": self.create_test_image(),
+        }
+
+        response = self.client.post(url, data, format='multipart')
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(Producto.objects.filter(nombre='Babel').exists())
+        
+
+class TestEliminarProducto(APITestCase):
+    def setUp(self):
+        # Crear un usuario y autenticarse
+        self.client = Client()
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.client.login(username='testuser', password='12345')
+
+        # Crear una categoría para pruebas
+        self.categoria = Categoria.objects.create(nombre="Libros")
+        
+        # Crear un producto para eliminar
+        self.producto = Producto.objects.create(
+            nombre="Producto de Prueba",
+            descripcion="Descripción de prueba",
+            precio=100,
+            stock=10,
+            categoria=self.categoria,
+            enabled=True
+        )
+
+    def test_eliminar_producto(self):
+        url = reverse('gestionar_productos', args=[self.producto.id])
+        response = self.client.post(url, data={"delete": "delete"})
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(Producto.objects.filter(id=self.producto.id).exists())
+
+
+class TestModificarProducto(APITestCase):
+    def setUp(self):
+        # Crear un usuario y autenticarse
+        self.client = Client()
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.client.login(username='testuser', password='12345')
+
+        # Crear una categoría para pruebas
+        self.categoria = Categoria.objects.create(nombre="Ropa")
+        
+        # Crear un producto para modificar
+        self.producto = Producto.objects.create(
+            nombre="Camisa de algodón",
+            descripcion="Camisa blanca de algodón",
+            precio=20,
+            stock=100,
+            categoria=self.categoria,
+            enabled=True
+        )
+
+    def test_modificar_producto(self):
+        url = reverse('gestionar_productos', args=[self.producto.id])
+
+        # Datos actualizados
+        nuevos_datos = {
+            "nombre": "Camisa de lino",
+            "descripcion": "Camisa gris de lino",
+            "precio": 25,
+            "stock": 80,
+            "enabled": True
+        }
+
+        inicio_tiempo = time()
+
+        response = self.client.post(url, data=nuevos_datos)
+
+        tiempo_transcurrido = time() - inicio_tiempo
+        self.assertLessEqual(tiempo_transcurrido, 5, "El tiempo de respuesta superó los 5 segundos")
+
+        self.assertEqual(response.status_code, 302)
+
+        self.producto.refresh_from_db()
+        self.assertEqual(self.producto.nombre, "Camisa de lino")
+        self.assertEqual(self.producto.precio, 25)
+        self.assertEqual(self.producto.stock, 80)
+        self.assertEqual(self.producto.descripcion, "Camisa gris de lino")
