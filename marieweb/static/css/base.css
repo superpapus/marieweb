@@ -22,6 +22,7 @@ body {
 .btn-custom {
     background-color: #A53260;
     color: white;
+    border: #A53260 2px solid !important;
 }
 .btn-custom:hover {
     background-color: #FFA5AB; 

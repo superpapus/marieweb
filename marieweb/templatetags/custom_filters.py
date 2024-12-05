@@ -4,6 +4,6 @@ register = template.Library()
 
 @register.filter
 def get_item(dictionary, key):
-    if key in dictionary:
+    if str(key) in dictionary:
         return dictionary[str(key)]
     return None

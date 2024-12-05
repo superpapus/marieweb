@@ -42,7 +42,8 @@
 <!-- Modal -->
 <div class="modal fade" id="agregarDeuda" tabindex="-1" aria-labelledby="agregarDeudaLabel" aria-hidden="true">
 <div class="modal-dialog">
-<div class="modal-content">
+<form class="modal-content" id="formGuardar" method="POST" action="{% url 'guardar_deuda' %}">
+    {% csrf_token %}
     <div class="modal-header">
         <h1 class="modal-title fs-5" id="agregarDeudaLabel">Agregar producto</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
@@ -56,8 +57,8 @@
             <!-- Selector de usuario -->
             <div class="mb-3">
                 <label for="usuarioSelect" class="form-label">Selecciona un usuario</label>
-                <select class="form-select" id="usuarioSelect" name="deuda-usuario">
-                    <option selected disabled>Seleccione...</option>
+                <select class="form-select" id="usuarioSelect" required>
+                    <option selected disabled value="-1">Seleccione...</option>
                     {% for usuario in usuarios %}
                     <option value="{{ usuario.pk }}">{{ usuario }}</option>
                     {% endfor %}
@@ -66,7 +67,7 @@
             <!-- Selector de productos -->
             <div class="mb-3">
             <label for="multipleSelect" class="form-label">Seleccionar productos</label>
-            <select multiple class="form-select" id="multipleSelect" onchange="mostrarSeleccion()">
+            <select multiple class="form-select" id="multipleSelect" onchange="mostrarSeleccion()" required>
                 {% for producto in productos %}
                 <option value="{{ producto.pk }}" data-nombre="{{ producto.nombre }}"
                     data-imagen="{{ producto.imagen.url }}" data-precio="{{ producto.precio }}">{{ producto }}</option>
@@ -74,13 +75,13 @@
             </select>
             </div>
             <!-- Contenedor de productos seleccionados -->
-            <div id="modal_productos" class="productos_seleccionados">
+            <div id="modal_productos" class="productos_seleccionados" style="margin-bottom: 20px; color: #777777;">
                 Aquí aparecerán los productos seleccionados.
             </div>
 
             <!-- Casilla de verificación -->
             <div class="mb-3 form-check">
-            <input type="checkbox" class="form-check-input" id="checkbox">
+            <input type="checkbox" class="form-check-input" id="checkbox" name="deuda-pagada">
             <label class="form-check-label" for="checkbox">Deuda Pagada</label>
             </div>
 
@@ -92,15 +93,14 @@
             <div id="totalSection">
                 <h4>Total: $<span id="totalAmount">0.00</span></h4>
             </div>
-        </div>
-        <form class="modal-footer" id="formGuardar" method="POST" action="{% url 'guardar_deuda' %}">
-            {% csrf_token %}
-            <input type="hidden" name="productos_json" id="productosJsonInput">
-            <input type="hidden" name="deuda-usuario" id="usuarioInput">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="submit" id="guardarBtn" class="btn btn-primary">Guardar</button>
-        </form>
-</div>
+    </div>
+    <div class="modal-footer">
+        <input type="hidden" name="productos_json" id="productosJsonInput">
+        <input type="hidden" name="deuda-usuario" id="usuarioInput">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" id="guardarBtn" class="btn btn-primary">Guardar</button>
+    </div>
+</form>
 </div>
 </div>
 <script>

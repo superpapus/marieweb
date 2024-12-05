@@ -45,7 +45,7 @@
         <h1>{{ titulo }}</h1>
         <p style="margin-bottom: 20px;">{{ descripcion }}</p>
         {% if mostrarAdmin %}
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregarDeuda">Agregar Deuda</button>
+        <button type="button" class="btn btn-custom" data-bs-toggle="modal" data-bs-target="#agregarDeuda">Agregar Deuda</button>
         {% endif %}
         {% if deuda %}
             {% include 'components/deuda-view.html' %}

@@ -214,9 +214,10 @@ def ver_deuda(request, id):
     })
 def guardar_deuda(request):
     if request.user.is_staff and request.method == 'POST':
-        productos_json = request.POST.get('productos_json')
         usuario_id = request.POST.get('deuda-usuario')
-        if not usuario_id or not productos_json:
+        productos_json = request.POST.get('productos_json')
+        deuda_pagada = request.POST.get('deuda-pagada') == 'on'
+        if usuario_id == "-1" or not productos_json:
             messages.error(request, 'Complete todos los campos.')
             return redirect('deudas_admin')
 
@@ -227,6 +228,7 @@ def guardar_deuda(request):
         productos_seleccionados = Producto.objects.filter(pk__in=productos_dict.keys())
         deuda.productos.add(*productos_seleccionados)
         deuda.cantidad_productos = productos_dict
+        deuda.pagado = deuda_pagada
 
         # Calcular el monto total
         total = 0
