@@ -4,14 +4,15 @@ from PIL import Image
 from django.test import TestCase, Client
 from django.urls import reverse
 from marieweb.models import Categoria, Encargo, Producto
-from django.contrib.auth.models import User
-from datetime import date
+# from django.contrib.auth.models import User
+from datetime import date, datetime
 from time import time
 from rest_framework.test import APITestCase
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
+User = get_user_model()
 
 class EncargoModelTest(TestCase):
     def setUp(self):

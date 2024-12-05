@@ -156,8 +156,8 @@
         <p class="monto">Monto pagado: <label>${{ deuda.monto_total }}</label></p>
         {% else %}
         <p class="monto">Monto a pagar: <label style="color: #ff3333; font-weight: bold;">${{ deuda.monto_total }}</label></p>
-        <button class="btn" onclick="location.href='ver/{{ deuda.pk }}'">Ver Deuda</button>
         {% endif %}
+        <button class="btn" onclick="location.href='ver/{{ deuda.pk }}'">Ver Deuda</button>
     </div>
     {% endif %}
     {% endfor %}
