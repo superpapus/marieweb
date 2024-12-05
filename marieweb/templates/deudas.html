@@ -44,7 +44,7 @@
         {% endif %}
         <h1>{{ titulo }}</h1>
         <p style="margin-bottom: 20px;">{{ descripcion }}</p>
-        {% if mostrarAdmin %}
+        {% if mostrarAdmin and mostrar_agregar_deuda%}
         <button type="button" class="btn btn-custom" data-bs-toggle="modal" data-bs-target="#agregarDeuda">Agregar Deuda</button>
         {% endif %}
         {% if deuda %}
@@ -56,6 +56,8 @@
         {% endif %}
     </main>
 </div>
+{% if mostrar_agregar_deuda %}
 {% include 'components/agregar-deuda.html' %}
+{% endif %}
 
 {% endblock content %}
