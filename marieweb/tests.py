@@ -4,6 +4,11 @@ from marieweb.models import Encargo
 from django.contrib.auth.models import User
 from datetime import date 
 
+from django.test import TestCase
+from django.contrib.auth import get_user_model
+from django.urls import reverse
+
+
 class EncargoModelTest(TestCase):
     def setUp(self):
         self.encargo = Encargo.objects.create(
@@ -74,3 +79,56 @@ class MisEncargosViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'mis_encargos.html')
         self.assertContains(response, "Producto de prueba")
+
+
+#Pruebas unitest de katy a ashley
+class AuthTests(TestCase):
+    def setUp(self):
+        self.user = get_user_model().objects.create_user(
+            username="testuser",
+            email="testuser@example.com",
+            password="SecurePass123"
+        )
+        self.login_url = reverse("login")  
+        self.logout_url = reverse("logout") 
+        self.password_reset_url = reverse("password_reset")  
+
+    def test_valid_authentication(self):
+        """
+        Validar autenticación exitosa con credenciales válidas.
+        """
+        response = self.client.post(self.login_url, {
+            "username": "testuser",
+            "password": "SecurePass123"
+        })
+        self.assertEqual(response.status_code, 302)  
+        self.assertIn("_auth_user_id", self.client.session)  
+
+    def test_invalid_authentication(self):
+        """
+        Probar manejo de credenciales inválidas y mostrar mensajes de error.
+        """
+        response = self.client.post(self.login_url, {
+            "username": "testuser",
+            "password": "WrongPass123"
+        })
+        self.assertEqual(response.status_code, 200)  
+        self.assertNotIn("_auth_user_id", self.client.session) 
+
+    def test_password_reset_flow(self):
+        """
+        Verificar el flujo completo de recuperación de contraseña.
+        """
+        response = self.client.post(self.password_reset_url, {
+            "email": "testuser@example.com"
+        })
+        self.assertEqual(response.status_code, 302)  
+
+    def test_logout_clears_session(self):
+        """
+        Confirmar que el cierre de sesión elimina la sesión del usuario.
+        """
+        self.client.login(username="testuser", password="SecurePass123")
+        response = self.client.post(self.logout_url)
+        self.assertEqual(response.status_code, 302)  
+        self.assertNotIn("_auth_user_id", self.client.session)  
