@@ -76,6 +76,16 @@
     .pagar-boton button:hover {
         background-color: #218838;
     }
+    .btn-modificar-deuda {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 1em;
+        color: #fff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
 </style>
 <div class="deuda-container">
     <h1>Orden de Deuda</h1>
@@ -104,4 +114,9 @@
         <button onclick="location.href=''">Pagar</button>
     </div>
     {% endif %}
+    {% if mostrarAdmin %}
+    <button type="button" class="btn btn-custom" data-bs-toggle="modal" data-bs-target="#modificarDeuda" onclick="mostrarSeleccion()">Modificar Deuda</button>
+    {% endif %}
 </div>
+
+{% include 'components/modificar-deuda.html' %}

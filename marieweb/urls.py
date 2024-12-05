@@ -11,6 +11,7 @@ urlpatterns = [
     path('deudas/ver/<int:id>/', views.ver_deuda, name='ver_deuda'),
     path('deudas/admin/ver/<int:id>/', views.ver_deuda, name='ver_deuda_admin'),
     path('deudas/admin/guardar_deuda/', views.guardar_deuda, name='guardar_deuda'),
+    path('deudas/admin/modificar_deuda/', views.modificar_deuda, name='modificar_deuda'),
     path('login/', views.login, name='login'),
     path('registro/', views.registro, name='registro'),
     path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),

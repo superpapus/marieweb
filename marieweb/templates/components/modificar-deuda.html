@@ -1,3 +1,4 @@
+{% load custom_filters %}
 <style>
     .card {
         display: grid;
@@ -39,37 +40,25 @@
 </style>
 
 <!-- Modal -->
-<div class="modal fade" id="agregarDeuda" tabindex="-1" aria-labelledby="agregarDeudaLabel" aria-hidden="true">
+<div class="modal fade" id="modificarDeuda" tabindex="-1" aria-labelledby="modificarDeudaLabel" aria-hidden="true">
 <div class="modal-dialog">
-<form class="modal-content" id="formGuardar" method="POST" action="{% url 'guardar_deuda' %}">
+<form class="modal-content" id="formModificarDeuda" method="POST" action="{% url 'modificar_deuda' %}">
     {% csrf_token %}
     <div class="modal-header">
-        <h1 class="modal-title fs-5" id="agregarDeudaLabel">Agregar deuda</h1>
+        <h1 class="modal-title fs-5" id="modificarDeudaLabel">Modificar deuda</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
     </div>
     <div class="modal-body">
-            <!-- input -->
-            <!-- <div class="mb-3">
-                <label for="input1" class="form-label">Campo de texto 1</label>
-                <input type="text" class="form-control" id="input1" placeholder="Ingrese texto">
-            </div> -->
-            <!-- Selector de usuario -->
             <div class="mb-3">
-                <label for="usuarioSelect" class="form-label">Selecciona un usuario</label>
-                <select class="form-select" id="usuarioSelect" required>
-                    <option selected disabled value="-1">Seleccione...</option>
-                    {% for usuario in usuarios %}
-                    <option value="{{ usuario.pk }}">{{ usuario }}</option>
-                    {% endfor %}
-                </select>
+                <label for="usuarioSelect" class="form-label">Modificando deuda #{{ deuda.pk }} del usuario {{ deuda.usuario.username }}</label>
             </div>
             <!-- Selector de productos -->
             <div class="mb-3">
             <label for="multipleSelect" class="form-label">Seleccionar productos</label>
             <select multiple class="form-select" id="multipleSelect" onchange="mostrarSeleccion()" required>
                 {% for producto in productos %}
-                <option value="{{ producto.pk }}" data-nombre="{{ producto.nombre }}"
-                    data-imagen="{{ producto.imagen.url }}" data-precio="{{ producto.precio }}">{{ producto }}</option>
+                <option {% if producto in deuda.productos.all %}selected{% endif %} value="{{ producto.pk }}" data-nombre="{{ producto.nombre }}"
+                    data-imagen="{{ producto.imagen.url }}" data-precio="{{ producto.precio }}" data-cantidad="{{ deuda.cantidad_productos|get_item:producto.pk }}">{{ producto }}</option>
                 {% endfor %}
             </select>
             </div>
@@ -80,24 +69,19 @@
 
             <!-- Casilla de verificación -->
             <div class="mb-3 form-check">
-            <input type="checkbox" class="form-check-input" id="checkbox" name="deuda-pagada">
+            <input {% if deuda.pagado %}checked{% endif %} type="checkbox" class="form-check-input" id="checkbox" name="deuda-pagada">
             <label class="form-check-label" for="checkbox">Deuda Pagada</label>
             </div>
 
-            <!-- Selector de fecha -->
-            <!-- <div class="mb-3">
-            <label for="datePicker" class="form-label">Selecciona una fecha limite</label>
-            <input type="date" class="form-control" id="datePicker">
-            </div> -->
             <div id="totalSection">
                 <h4>Total: $<span id="totalAmount">0</span></h4>
             </div>
     </div>
     <div class="modal-footer">
         <input type="hidden" name="productos_json" id="productosJsonInput">
-        <input type="hidden" name="deuda-usuario" id="usuarioInput">
+        <input type="hidden" name="deuda-id" id="deuda-id" value="{{ deuda.pk }}">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" id="guardarBtn" class="btn btn-primary">Guardar</button>
+        <button type="submit" id="guardarBtn" class="btn btn-primary">Guardar cambios</button>
     </div>
 </form>
 </div>
@@ -123,6 +107,8 @@
             var productoNombre = option.getAttribute("data-nombre");
             var productoImagen = option.getAttribute("data-imagen");
             var productoPrecio = parseFloat(option.getAttribute("data-precio"));
+            console.log(option.getAttribute("data-cantidad"));
+            var productoCantidad = option.getAttribute("data-cantidad");
 
             // Crear una card para cada producto seleccionado
             var card = document.createElement("div");
@@ -144,7 +130,7 @@
             var quantityInput = document.createElement("input");
             quantityInput.type = "number";
             quantityInput.min = "1";
-            quantityInput.value = "1";
+            quantityInput.value = productoCantidad? productoCantidad : "1";
             quantityInput.id = "cantidad_" + productoId;
             quantityInput.oninput = function() {
                 // Cuando se cambie la cantidad, recalcular el total y actualizar el JSON
@@ -193,13 +179,9 @@
         }
 
         // Función para guardar el JSON en el campo oculto antes de enviar el formulario
-        document.getElementById('formGuardar').onsubmit = function() {
+        document.getElementById('formModificarDeuda').onsubmit = function() {
             // Convertimos el objeto productosSeleccionados a JSON
             document.getElementById('productosJsonInput').value = JSON.stringify(productosSeleccionados);
-
-            // Guardamos el usuario seleccionado en el campo oculto
-            var usuarioSelect = document.getElementById('usuarioSelect');
-            document.getElementById('usuarioInput').value = usuarioSelect.value;
         };
     }
 </script>
