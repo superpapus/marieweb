@@ -1,16 +1,17 @@
 import datetime
 import json
 from django.shortcuts import get_object_or_404, redirect, render
-from .models import Producto, Categoria, Deuda, Encargo
+from .models import Producto, Categoria, Deuda, Encargo, Usuario
 from django.contrib import messages
 from django.contrib.auth import login as auth_login, authenticate
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 from django.utils.timezone import now, timedelta
 from .forms import EncargoForm
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 
 # Create your views here.
 def inicio(request):
@@ -298,6 +299,37 @@ def logout_view(request):
     auth_logout(request)
     messages.success(request, "Has cerrado sesión exitosamente.")
     return redirect('inicio')
+
+def registro(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        # Validar contra
+        if not Usuario.validate_password(password):
+            messages.error(request, "La contraseña debe tener al menos 8 caracteres, una mayúscula y un número.")
+            return redirect('registro')
+
+        # Verificar si ya existe apodo o email registrando
+        if Usuario.objects.filter(username=username).exists():
+            messages.error(request, "El nombre de usuario ya está en uso.")
+            return redirect('registro')
+
+        if Usuario.objects.filter(email=email).exists():
+            messages.error(request, "El correo electrónico ya está en uso.")
+            return redirect('registro')
+
+        # Si todo se verifico Crear el usuario
+        usuario = Usuario.objects.create_user(
+            username=username,
+            email=email,
+            password=password
+        )
+        messages.success(request, "Tu cuenta ha sido creada exitosamente. Ahora puedes iniciar sesión.")
+        return redirect('login')
+
+    return render(request, 'registro.html')
 
 def crear_encargo(request):
     if request.method == 'POST':
