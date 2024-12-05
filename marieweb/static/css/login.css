@@ -12,11 +12,11 @@ body {
 
 .formulario {
     background-color: #DA627D;
-    padding: 5vw 10vw; /* Ajuste proporcional a la pantalla */
+    padding: 5vw 10vw; 
     border-radius: 15px;
     margin-top: 5vw;
     margin-bottom: 5vw;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para dar profundidad */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
     width: 100%;
     max-width: 400px;
     text-align: center;
