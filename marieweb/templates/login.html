@@ -37,6 +37,9 @@
             <p>Intentos restantes: {{ remaining_attempts }}</p>
         {% endif %}
 
+        <div class="register-link">
+            <p>¿No tienes una cuenta? <a href="{% url 'registro' %}" class="btn-secondary">Regístrate</a></p>
+        </div>
     </div>
 </body>
 </html>
