@@ -220,7 +220,6 @@ def guardar_deuda(request):
         productos_json = request.POST.get('productos_json')
         deuda_pagada = request.POST.get('deuda-pagada') == 'on'
         if usuario_id == "-1" or not productos_json:
-            messages.error(request, 'Complete todos los campos.')
             return redirect('deudas_admin')
 
         productos_dict = json.loads(productos_json)  # Convertir el JSON a un diccionario
@@ -244,13 +243,19 @@ def guardar_deuda(request):
     return redirect('deudas_admin')
 
 def modificar_deuda(request):
+    if request.POST.get('pagar'):
+        deuda = Deuda.objects.get(pk=request.POST.get('deuda-id'))
+        deuda.pagado = True
+        # deuda.fechaPago = datetime.datetime.now()
+        # deuda.metodo_pago = request.POST.get('metodo_pago')
+        deuda.save()
+        return redirect('deudas')
+    
     if request.user.is_staff and request.method == 'POST':
         deuda_id = request.POST.get('deuda-id')
         productos_json = request.POST.get('productos_json')
         deuda_pagada = request.POST.get('deuda-pagada') == 'on'
-        print(deuda_id, productos_json, deuda_pagada)
         if not deuda_id or not productos_json:
-            messages.error(request, 'Complete todos los campos.')
             return redirect('deudas_admin')
 
         deuda = Deuda.objects.get(pk=deuda_id)

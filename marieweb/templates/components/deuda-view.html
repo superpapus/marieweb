@@ -110,9 +110,12 @@
         <h3>Total: ${{ deuda.monto_total }}</h3>
     </div>
     {% if not deuda.pagado and not mostrarAdmin%}
-    <div class="pagar-boton">
-        <button onclick="location.href=''">Pagar</button>
-    </div>
+    <form class="pagar-boton" method="POST" action="{% url 'modificar_deuda' %}">
+        {% csrf_token %}
+        <input type="hidden" name="deuda-id" id="deuda-id" value="{{ deuda.pk }}">
+        <input type="hidden" name="pagar" id="pagar" value="True">
+        <button type="submit" onclick="location.href=''">Pagar</button>
+    </form>
     {% endif %}
     {% if mostrarAdmin %}
     <button type="button" class="btn btn-custom" data-bs-toggle="modal" data-bs-target="#modificarDeuda" onclick="mostrarSeleccion()">Modificar Deuda</button>
